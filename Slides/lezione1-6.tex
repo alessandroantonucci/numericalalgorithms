@@ -1,0 +1,91 @@
+\documentclass[professionalfonts,handout]{beamer}
+\usepackage{circuitikz}
+\input{mycommands.sty}
+\title{Algoritmi Numerici (Parte I)}
+\subtitle{[Lezione 6] Operazioni aritmetiche}
+\author{Alessandro Antonucci\\{\tt alessandro.antonucci@supsi.ch}}
+\date{\tiny\url{https://colab.research.google.com/drive/10HxMjR7A0Qa8X3cRe2ZCgO-rtRyYvVKY}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\maketitle
+\frame{\frametitle{Somma}
+\begin{itemize}
+\item Sistema a 4 bit con complemento a 2
+\item Somma con circuiti con porte Booleane (\href{https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Halfadder.gif/220px-Halfadder.gif}{link}) \\ \exe{(es. $0+0=1+1=0$ e $0+1=1+0=1$ \`e XOR)} 
+\item $0010 + 0011 = 0101$ \exe{$2+3=5$} 
+\item $0010 + 1100 = 1110$ \exe{$2+(-4)=-2$}
+\item $0011 + 0110 = 1001$ \exe{$3+6 \neq -7$} overflow!
+\item $1100 + 1010 = 0110$ \exe{$-4-6 \neq 10$} underflow!
+\end{itemize}
+\begin{center}
+\emph{ \evi{Over/under flow se il primo bit \`e uguale}
+\evi{nei due addendi, ma diverso nella somma}}
+\end{center}
+\begin{itemize}
+\item $1100+1100=1000$ \exe{$-4-4=-8$} \\(giusto anche con riporto)
+\end{itemize}}
+
+\frame{\frametitle{Sottrazione (e precisione multipla)}
+\begin{itemize}
+\item Somma di due numeri a 4 bit:
+\begin{itemize}
+\item Due addendi (4+4 bit) 
+\item Carry (C, 1 bit) si attiva per il riporto \exe{$1+1=1$ \`e AND}
+\item Overflow (V, 1 bit) si attiva per identificare over/under
+\end{itemize}
+\item Numeri piu grandi
+\begin{itemize}
+\item Precisione multipla (tante locazioni affiancate)
+\item Si inizializza $C=0$ (non importa se alla fine $C=1$)
+\item Risultato corretto solo se $V=0$
+\end{itemize}
+\item Sottrazione
+\begin{itemize}
+\item a - b = a + (-b)
+\item Per scrivere $-b$, scrivo $b$ in base 2 e poi cambio segno \\ (ricopio da dx finch\'e non trovo $1$, scrivo quello, poi nego)
+\end{itemize}
+\end{itemize}}
+
+\frame{\frametitle{Moltiplicazione e Divisione}
+\begin{itemize}
+\item Moltiplicazioni in colonna = somme numeri spostati a sx
+\item ASL (arithmetic shift left) sposto i bit a sx (uno zero a dx)
+\item Es. ASR(0011)=0110 
+\item \`E moltiplicazione per 2 (se $V=0$ vale anche con complemento a 2)
+\item Divisione: analoga ma sposto a dx
+\item ASR (arithmetic shift right), divisione (intera) per 2
+\end{itemize}}
+
+\frame{\frametitle{Aritmetica float}
+\begin{itemize}
+\item Dati due numeri (float)
+\begin{itemize}
+\item $a = m_1 \cdot b^q$ 
+\item	$b = m_2 \cdot b^p$ ($q>p$)
+\end{itemize}
+\item Posso calcolare
+\begin{itemize}
+\item $a+b = (m_1 + m_2 \cdot b^{p-q}) \cdot b^q$
+\item $a \cdot b = (m_1 \cdot m_2) \cdot b^{q+p}$
+\item $a / b= (m_1 / m_2) \cdot b^{q-p}$
+\end{itemize}
+\item Le operazioni sulla mantissa introducono un errore\\
+(riducono le cifre significative)
+\end{itemize}}
+
+\frame{\frametitle{Under/over flow con numeri float} 
+Formati float-like caratterizzati da:
+\begin{itemize}
+\item $m_1$ numero pi\`u piccolo rappresentabile
+\item $M_1$ numero pi\`u grande.
+\end{itemize}
+Quando inserisco un numero $x$, il sistema restituisce
+\begin{itemize}
+\item overflow se $x$ esterno a $[-M_1,M_1]$
+\item underflow se interno a $(-m_1,m_1)$ (approssimato con lo zero)
+\end{itemize}
+Nel formato float, se tutti i bit dell'esponente sono uno, casi speciali
+\vskip 2mm
+Es. $0|11111111|00000000000000000000000\to + \infty$
+Es. $0|11111111| 00000000001000001000000 \to NaN$}
+\end{document}
