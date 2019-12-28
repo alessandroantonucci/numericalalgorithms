@@ -1,0 +1,151 @@
+\documentclass[professionalfonts]{beamer}
+\input{mycommands.sty}
+\title{Algoritmi Numerici (Parte II)}
+\subtitle{[Lezione 1] Algoritmo di bisezione e regula falsi}
+\author{Alessandro Antonucci\\{\tt alessandro.antonucci@supsi.ch}}
+\date{\tiny\url{https://colab.research.google.com/drive/1l5_Nsbk2LIETfD3IDm74w6Wl0HhrjRcB}}
+\begin{document}
+\maketitle
+\setstretch{1.4}
+\frame{\frametitle{Bracketing}
+\begin{itemize}
+\item Data una funzione $f$ (continua)
+\item \evi{Se} sull'intervallo $[a,b]\subset \mathbb{R}$,\\la funzione cambia segno,\\ovvero $f(a)\cdot f(b) < 0$
+\item \evi{Allora} la funzione ha uno zero\\in questo intervallo,\\ovvero $\exists$ $x^* \in [a,b]$ tale che $f(x^*)=0$
+\end{itemize}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{La bisezione}
+\begin{itemize}
+\item Dopo aver localizzato $x^*$ sull'intervallo $[a,b]$
+\item Prendo il punto medio $c:=\frac{a+b}{2}$
+\item La funzione cambia segno su $[a,c]$ \evi{oppure} su $[c,b]$
+\item Nel primo caso $x^*\in[a,c]$, \\ nel secondo $x^*\in [c,b]$
+\end{itemize}
+\begin{center}
+\color{black!50}{In entrambi i casi, il nuovo intervallo \`e la met\`a del vecchio}
+\end{center}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{La bisezione (pseudo codice)}
+\begin{columns}
+\begin{column}[T]{0.4\textwidth}
+\tt
+if f(a)*f(b)<0: \\
+\quad for k in range(n): \\      
+\quad\quad	c = (a+b)/2;  \\  	
+\quad\quad	if f(a)*f(c) < 0:	\\
+\quad\quad\quad b = c\\     
+\quad\quad else\\
+\quad\quad\quad a = c\\
+\end{column}
+\begin{column}[T]{0.4\textwidth}
+L'algoritmo viene iterato
+\begin{center}
+$n$ (numero fissato) volte
+\vskip 2mm
+oppure
+\vskip 2mm
+fino a quando\\
+$|b-a|$ diventa piccolo
+\end{center}
+\end{column}
+\end{columns}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{Promemoria}
+\begin{itemize} 
+\item Dato l'intervallo $[a,b]$:
+	\begin{itemize}
+	\item la sua ampiezza \`e $b-a$
+	\item il suo punto medio  $\frac{a+b}{2}$
+	\end{itemize}
+\item Es. l'intervallo $[4,10]$ ha ampiezza $6$ e punto medio $x=7$
+\item Se $x^*\in[a,b]$, la stima puntuale \`e il punto medio $c:=\frac{a+b}{2}$
+\item L'errore peggiore \`e $\epsilon_{worst}=\frac{b-a}{2}$
+\item Ogni altra stima produrrebbe un errore superiore
+\end{itemize}
+}
+	
+	
+\frame{\frametitle{Analisi precisione}
+\begin{itemize}
+\item Intervallo iniziale $[a^0,b^0]$, stima puntuale $c^0:=\frac{a^0+b^0}{2}$
+\item $x^* \in [a^0,b^0]$ e $\epsilon^0:=|x^*-c^0|< \frac{b^0-a^0}{2}$
+\item Analogamente, $\epsilon^k < \frac{b^0-a^0}{2^{k+1}}$
+\end{itemize}
+\begin{center}
+\color{black!50}{Con la bisezione posso quindi prevedere\\quante iterazioni servono per rendere l'errore minore\\di un valore prefissato}
+\end{center}}
+
+\frame{\frametitle{Osservazione}
+\begin{itemize}
+\item L'algoritmo di bisezione si basa sulla scelta di un punto $c$ interno all'intevallo $[a,b]$
+\item Scegliere il punto medio ha il vantaggio/svantaggio di rendere il nuovo intervallo la met\`a di quello vecchio
+\item Ogni altra scelta di $c\in[a,b]$ permette comunque di procedere
+\item In particolare, nella scelta di $c$ pu\`o essere utile considerare il valore (e non solo il segno) della
+	funzione in $f(a)$ e $f(b)$
+\end{itemize}
+}
+
+\frame{\frametitle{Regula Falsi}
+\begin{itemize}
+\item Variante dell'algoritmo di bisezione 
+\item $c$ \`e il punto d'incontro con l'asse $x$ della retta che passa per i punti di coordinate $(a,f(a))$ e $(b,f(b))$
+\end{itemize}
+\vskip 2mm
+$$c:= a - \frac{f(a)}{ \frac{f(b)-f(a)}{b-a}}$$}
+
+\frame{\frametitle{Regula falsi}
+\begin{tikzpicture}[domain=0:4,scale=1.2]
+\draw[->,thick] (-1,0) -- (5,0);
+\draw[densely dotted,black!60!green,thick] (0,3) -- (4,-7/3);
+\draw[black!60!green,thick] (9/4,-.1) -- (9/4,.1) node[above] {$c$};
+\draw[red,thick,densely dotted] (4,0) -- (4,-7/3);
+\draw [red,fill] (4,-7/3) circle [radius=0.05] node[right] {$(b,f(b))$};
+\draw[red,thick] (4,-.1) -- (4,.1) node[above] {$b$};
+\draw[blue,densely dotted,thick] (0,0) -- (0,3);
+\draw [blue,fill] (0,3) circle [radius=0.05] node[left] {$(a,f(a))$};
+\draw[blue,thick] (0,.1) -- (0,-.1) node[below] {$a$};
+\draw[thick,color=orange] plot[id=exp] function{3-x*x*1/3}; 
+\draw[black!60!green] (4,2) node[] {$c=a-\frac{f(a)}{\frac{f(b)-f(a)}{b-a}}$};
+%\draw [fill] (9,5) circle [radius=0.05];
+%\draw[very thin,color=gray] (-0.1,-1.1) grid (3.9,3.9);
+% node[right]{} {$x%$};
+%\draw[->] (0,-3.2) -- (0,6.2) node[above] {$f(x)$};
+%\draw[color=red] plot[id=x] function{x} 
+%node[right] {$f(x) =x$};
+%\draw[color=blue] plot[id=sin] function{sin(x)} 
+%node[right] {$f(x) = \sin x$};
+%\draw[color=blue] (0,-3) node[left] {$(a,f(a))$};
+%\draw[color=blue] (3,6) node[left] {$(b,f(b))$};
+%\draw[color=blue] (0,0) node[left] {$a$};
+%\draw[color=blue] (1.2,0) node[left] {$c$};
+%\draw[color=blue] (3,0) node[left] {$b$};
+%\draw (3,6)--(0,-3);
+%\draw[color=orange] plot[id=exp] function{x*x-3} 
+%node[right] {$f(x) = \mathrm x^2-3$};
+\end{tikzpicture}
+}
+
+
+\frame{\frametitle{Regula Falsi (ii)}
+\begin{itemize}
+\item Tipicamente, dopo un certo numero di iterazioni, la regula falsi sposta sempre l'estremo destro (o sempre quello sinistro) dell'intervallo
+\item Se sull'intervallo la funzione \`e sempre concava (o convessa), la retta che congiunge i due punti estremi \`e sempre a sx (o sempre a dx) dello zero della funzione
+\item In pratica, l'ampiezza dell'intervallo non tende a zero, ma il punto $c$ tende a $x^*$
+\end{itemize}}
+
+
+\frame{\frametitle{Ibrido Regula Falsi + Bisezione}
+	\begin{itemize}
+		\item Dato $[a,b]$ (su cui $f$ cambia segno)
+		\item $[a,b]=RegFals(a,b)$ (una volta RF)
+		\item WHILE($\ldots$ )$\{[a,b]=Bisez(a,b)\}$ \\
+			(itero bisez finch\'e non si muove l'estremo fisso della RF)
+		\item Ricomincio con RF
+	\end{itemize}
+	\vskip 2mm
+	\begin{center}
+		\emph{Supera problema estremo fisso della RF}
+\end{center}}
+
+
+\end{document}

@@ -1,0 +1,60 @@
+\documentclass[professionalfonts]{beamer}
+\input{mycommands.sty}
+\title{Algoritmi Numerici (Parte II)}
+\subtitle{[Lezione 3] Convergenza}
+\author{Alessandro Antonucci\\{\tt alessandro.antonucci@supsi.ch}}
+\date{\tiny\url{https://colab.research.google.com/drive/1RrlLMSom2M0E3iQk-XbDm66pDxtGAVtR}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\maketitle
+\setstretch{1.4}
+\frame{\frametitle{Convergenza} Una successione di valori
+$x_0,x_1,x_2,\ldots$ converge verso un valore $x^*$ se la distanza/errore
+$\epsilon_k := \mid x_k-x\mid$ tende sempre pi\`u ad avvicinarsi a zero con il
+crescere di $k$
+$$\lim_{k\to+\infty} \epsilon_k = 0$$
+Un algoritmo iterativo per la ricerca degli zeri di
+una funzione genera una successione di valori $x_0,x_1,x_2,\ldots$,
+tale che, nei casi in cui converge, tende verso il valore $x^*$ di uno
+zero}
+
+\frame{\frametitle{Ordine di convergenza}
+Un algoritmo
+iterativo ha ordine di convergenza $p$ se esistono due numeri $C\geq
+0$ e $p\geq 0$ tali che $$\lim_{k\rightarrow\infty}
+\frac{e_{k+1}}{e_k^p}=C,$$ ovvero $|x_{k+1}-x^*|<C |x_k-x^*|^p$
+\vskip 2mm
+Se $p=1$ si dice che l'ordine di convergenza
+\`e lineare\\ superlineare con $1<p<2$, quadratico con $p=2$}
+
+\frame{\frametitle{Convergenza dei vari algoritmi}
+\begin{itemize}
+\item L'algoritmo della bisezione e le sue varianti convergono linearmente ($p=1$)
+\item L'algoritmo della secante converge superlinearmente\\
+($p=\frac{1+\sqrt{5}}{2} \simeq 1.618$)
+\item L'algoritmo della tangente converge quadraticamente ($p=2$)
+\end{itemize}}
+
+
+\frame{\frametitle{Convergenza su punti a tangenza orizzontale}
+\begin{itemize}
+\item Se $f'(x^*)=0$ (zero con tangente orizzontale), l'algoritmo della tangente ``rallenta'' e la convergenza \`e lineare e non quadratica
+\item Es. con $f(x)=x^2$, $f(x)=2x$ allora $x^*=0$ e $f'(x^*)=0$.
+\end{itemize}
+\vskip 1mm
+\centering
+	\small
+\begin{tabular}{cccc}
+$k$&$x_k$&$f(x_k)$&$f'(x_k)$\\
+	\hline
+$0$	& $1$	&$1$&$2$\\
+$1$	& $1-\frac{1}{2}=\frac{1}{2}$&$\frac{1}{4}$&$1$\\
+$2$	&$\frac{1}{2}-\frac{\frac{1}{4}}{1}=\frac{1}{4}$&$\frac{1}{16}$&$\frac{1}{2}$\\
+$3$	&$\frac{1}{4}-\frac{\frac{1}{16}}{\frac{1}{2}}=\frac{1}{8}$\\
+
+\end{tabular}
+\vskip 1mm	\emph{Ogni iterazione dimezza l'errore, convergenza lineare!}
+\vskip 1mm la stessa cosa succede con l'algoritmo della secante
+}
+
+\end{document}
