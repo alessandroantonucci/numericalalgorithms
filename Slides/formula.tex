@@ -3,74 +3,126 @@
 \geometry{ a4paper, total={170mm,257mm}, left=20mm, top=20mm, }
 \usepackage[familydefault,light]{Chivo}
 \usepackage{setspace}
+\newif\ifita
+\itatrue % comment out to hide answers
+\itafalse
 \begin{document}
 \onehalfspacing
 \renewcommand{\baselinestretch}{1.5} 
 \clearpage\thispagestyle{empty}
 \begin{center}
-{\Large \bf ::: FORMULARIO :::}
+{\Large \bf ::: \ifita FORMULARIO \else FORMULAE \fi :::}
 \end{center}
-
 \vskip 3mm
-\paragraph{\bf ::: Premessa :::}
+\paragraph{\bf ::: \ifita Premessa \else Introduction \fi :::}
 \begin{itemize} 
-\item Input: $\{x_0,x_1,\ldots,x_n\}$ e $\{y_0,y_1,\ldots,y_n\}$ (coordinate dei punti).
-\item $n+1$ punti che definiscono $n$ intervalli.
+\item Input: $\{x_0,x_1,\ldots,x_n\}$ e $\{y_0,y_1,\ldots,y_n\}$ (\ifita coordinate dei punti \else points coordinates\fi).
+\item $n+1$ \ifita punti che definiscono \else points defining \fi $n$ \ifita intervalli \else intervals \fi.
 \end{itemize}
 \vskip 3mm
-\paragraph{\bf ::: Interpolazione polinomiale :::}
+\paragraph{\bf ::: \ifita Interpolazione polinomiale \else Polynomial interpolation \fi:::}
 \begin{itemize} 
-\item Polinomio interpolante di grado $n$:
+
+\item \ifita Polinomio interpolante di grado \else Interpolating polynomial of degree \fi $n$:
 $$p(x):=\sum_{i=0}^n c_i \left[ \prod_{j=0}^{i-1} (x-x_j) \right]$$
-Es. se $n=2$ (3 punti), $p(x)=c_0+c_1(x-x_0)+c_2(x-x_0)(x-x_1)$.
+\ifita Es. se $n=2$ (3 punti), \else Ex. if $n=2$ (3 points), \fi $p(x)=c_0+c_1(x-x_0)+c_2(x-x_0)(x-x_1)$.
+\ifita
 \item I parametri $\{c_0,c_1,\ldots,c_n\}$ si cacolano (in tempo quadratico e spazio lineare) con lo schema di calcolo a piramide.
+\else
+\item Parameters $\{c_0,c_1,\ldots,c_n\}$ are obtained (in quadratic time and linear space) by the pyramid-shape computations.
+\fi
 \end{itemize}
 
-\subsection*{\bf ::: Spline quadratica :::}
+\subsection*{\bf ::: \ifita Spline quadratica \else Quadratic spline \fi :::}
 \begin{itemize}
+\ifita
 \item Per $x\in[x_k,x_{k+1}]$, ho la parabola:
+\else
+\item For $x\in[x_k,x_{k+1}]$, the parabolic curve rewrites as:
+\fi
 $$f_k(x):= y_k+z_k(x-x_k)+\frac{z_{k+1}-z_k}{2(x_{k+1}-x_k)} (x-x_k)^2$$
+\ifita
 per ogni $k=0,...,n-1$ (complessivamente $n$ parabole).
+\else
+for each $k=0,...,n-1$ ($n$ parabolic curves overall).
+\fi
+\ifita
 \item I parametri $z_0,\ldots,z_n$ (intepretazione $z_k:=f'(x_k)$) si ricavano con ricorsione di ordine uno (complessit\`a lineare).
+\else
+\item Parameters $z_0,\ldots,z_n$ (intepretation $z_k:=f'(x_k)$) are obtained by an order-1 recursion  (linear complexity).
+\fi
+\ifita
 \item Il valore iniziale di $z_0$ \`e assegnato, per gli altri:
+\else
+\item Starting value $z_0$ is given, for the others:
+\fi
 $$z_{k+1} = -z_k + 2 \frac{y_{k+1}-y_k}{x_{k+1}-x_k}$$
 \end{itemize}
 
-\subsection*{\bf ::: Spline cubica (naturale) :::} 
+\subsection*{\bf ::: \ifita Spline cubica (naturale) \else Cubic spline (natural) \fi :::} 
 \begin{itemize}
+\ifita
 \item Per $x\in[x_k,x_{k+1}]$, ho la cubica:
+\else
+\item With$x\in[x_k,x_{k+1}]$, the cubic interpolating function is:
+\fi
 $$f_k(x)=\frac{z_{k+1}(x-x_k)^3+z_k(x_{k+1}-x)^3}{6h_k}+\left(\frac{y_{k+1}}{h_k}-\frac{h_k}{6}z_{k+1}\right)(x-x_k)+\left(\frac{y_{k}}{h_k}-\frac{h_k}{6}z_{k}\right)(x_{k+1}-x),$$
+\ifita
 per ogni $k=0,...,n-1$, dove $h_k:=(x_{k+1}-x_k)$ reppresenta l'ampiezza dell'intervallo su cui \`e definita la cubica.
-\item I parametri $z_0,\ldots,z_n$ (intepretazione $z_k=f''(x_k)$) si ricavano mediante risoluzione di un sistema lineare di $n-1$ equazioni nelle $n-1$ incognite $z_1,\ldots,z_{n-1}$, mentre $z_0=z_n=0$ per la condizione di naturalit\`a. Le $n-1$ equazioni del sistema sono:
+\else
+for each $k=0,...,n-1$, where $h_k:=(x_{k+1}-x_k)$ represents the width on the interval where the cubic function is defined.
+\fi
+\ifita
+\item I parametri $z_0,\ldots,z_n$ (intepretazione $z_k:=f''(x_k)$) si ricavano mediante risoluzione di un sistema lineare di $n-1$ equazioni nelle $n-1$ incognite $z_1,\ldots,z_{n-1}$, mentre $z_0=z_n=0$ per la condizione di naturalit\`a. Le $n-1$ equazioni del sistema sono:
+\else
+\item Parameters $z_0,\ldots,z_n$ (intepretation $z_k:=f''(x_k)$) are obtained from a linear system of $n-1$ equations with respect to the $n-1$ unknowns $z_1,\ldots,z_{n-1}$, while $z_0=z_n=0$ because of the natural sp-line condition. The $n-1$ equations of the linear system are:
+\fi
 $$h_{k-1}z_{k-1}+2(h_{k-1}+h_k)z_k+h_kz_{k+1}=6\left(\frac{y_{k+1}-y_k}{h_k}-\frac{y_k-y_{k-1}}{h_{k-1}}\right),$$
-con $k=1,\ldots,n-1$. Per poi se $h_k=1$ per ogni $k$ (ovvero le $x$ dei punti sono equidistanti ed a distanza uno), le equazioni si riscrivono come:
+\ifita con $k=1,\ldots,n-1$. Se $h_k=1$ per ogni $k$ (ovvero le $x$ dei punti sono equidistanti ed a distanza uno), le equazioni si riscrivono come:
+\else
+where $k=1,\ldots,n-1$. If $h_k=1$ for each $k$ (that means the $x$ of the points are at the same distance on the x-axis and at distance one), equations rewrite as:
+\fi
 $$z_{k-1}+4 z_k+z_{k+1}=6 (y_{k+1}-2y_k+y_{k-1})$$
 \end{itemize}
-
 \newpage
-%\subsection*{\bf ::: Interpolazione Trigonometrica :::} 
-%\begin{itemize}
-%\item Premessa: in questa formula, ho $n$ punti (e non $n+1$ come nelle altre) di coordinate $\{(x_i,y_i)\}_{i=0}^{n-1}$ ed assumo $n$ dispari.
-%\item La funzione interpolante \`e:
-%$$f(x):= C + \sum_{j=1}^m \left[ a_j \cos (jx) + b_j \sin (jx) \right],$$ 
-%e dipende da $n$ parametri (quindi $m=\frac{n-1}{2}$).
-%\item Se i punti di appoggio dividono l'intervallo $[0,2\pi]$ in $n$ parti uguali, allora valgono le seguenti formule:
-%$$a_j = \frac{2}{n} \sum_{i=0}^{n-1} \left[ y_i \cos(j x_i) \right], \quad \forall j=0,1,\ldots,m$$
-%$$b_j = \frac{2}{n} \sum_{i=0}^{n-1} \left[ y_i \sin(j x_i) \right], \quad \forall j=1,\ldots,m,$$
-%e $C=\frac{a_0}{2}$, con $a_0$ che si ricava dalla formula dei coseni (che da' semplicemente $a_0=\frac{2}{n}\sum_{i=0}^{n-1} y_i$, ovvero $C$ \`e il valore medio delle $y$).
-%\end{itemize}
-
-\subsection*{\bf ::: Regressione lineare :::} 
+\subsection*{\bf ::: \ifita Interpolazione Trigonometrica \else Trigonometric Interpolation \fi :::} 
 \begin{itemize}
-\item Dati $n$ punti $\{(x_i,y_i)\}_{i=1}^{n}$ trovo retta rappresentativa di equazione $y=mx+q$
-\item $m=\frac{\sum_i x_i y_i - n \overline{x} \overline{y}}{\sum_i x_i^2 - n \overline{x}^2}$ e $q = \overline{y} - m \overline{x}$ con $\overline{x} = \frac{\sum_i x_i}{n}$ e $\overline{y}=\frac{\sum_i y_i}{n}$
+\item \ifita Premessa: in questa formula, ho $n$ punti (e non $n+1$ come nelle altre) di coordinate $\{(x_i,y_i)\}_{i=0}^{n-1}$ ed assumo $n$ dispari.
+\else
+Premise: in this formula we have $n$ points (and not $n+1$ as in the other formulae) of coordinates $\{(x_i,y_i)\}_{i=0}^{n-1}$ and we assum $n$ to be odd.
+\fi
+\item \ifita La funzione interpolante \`e \else The interpolating function is\fi:
+$$f(x):= C + \sum_{j=1}^m \left[ a_j \cos (jx) + b_j \sin (jx) \right],$$
+\ifita
+e dipende da $n$ parametri (quindi $m=\frac{n-1}{2}$).
+\else
+and depends on $n$ parameters (thus, $m=\frac{n-1}{2}$).
+\fi
+\ifita
+\item Se i punti di appoggio dividono l'intervallo $[0,2\pi]$ in $n$ parti uguali,\\allora valgono le seguenti formule:
+\else
+\item If the points are splitting the interval $[0,2\pi]$ in $n$ parts of equal size,\\the following formulae hold:
+\fi
+$$a_j = \frac{2}{n} \sum_{i=0}^{n-1} \left[ y_i \cos(j x_i) \right], \quad \forall j=0,1,\ldots,m$$
+$$b_j = \frac{2}{n} \sum_{i=0}^{n-1} \left[ y_i \sin(j x_i) \right], \quad \forall j=1,\ldots,m,$$
+\ifita
+e $C=\frac{a_0}{2}$, con $a_0$ che si ricava dalla formula dei coseni (che da' semplicemente $a_0=\frac{2}{n}\sum_{i=0}^{n-1} y_i$, ovvero $C$ \`e il valore medio delle $y$).
+\else
+and $C=\frac{a_0}{2}$, where $a_0$ is obtained from the cosine formula\\ (this giving $a_0=\frac{2}{n}\sum_{i=0}^{n-1} y_i$, that means $C$ is the average of the $y$) coordinates.
+\fi
+\end{itemize}
+
+\subsection*{\bf ::: \ifita Regressione lineare \else Linear Regression \fi :::} 
+\begin{itemize}
+\item \ifita Dati $n$ punti \else Given $n$ points \fi $\{(x_i,y_i)\}_{i=1}^{n}$ \ifita trovo retta rappresentativa di equazione \else finding representative line of equation \fi $y=mx+q$
+\item $m=\frac{\sum_i x_i y_i - n \overline{x} \, \overline{y}}{\sum_i x_i^2 - n \overline{x}^2}$ \ifita e \else and \fi $q = \overline{y} - m \overline{x}$ \ifita con \else where \fi $\overline{x} = \frac{\sum_i x_i}{n}$ \ifita e \else and \fi $\overline{y}=\frac{\sum_i y_i}{n}$
 \end{itemize}
 
 
-\subsection*{\bf ::: Integrazione numerica :::} 
+\subsection*{\bf ::: \ifita Integrazione Numerica \else Numerical Integration \fi :::} 
 \begin{itemize}
-\item Approssimo l'integrale $\int_{a}^b f(x) \mathrm{d}x$ dividendo l'intervallo $[a,b]$ in $n$ parti mediante gli $n+1$ punti $x_0,x_1,\ldots,x_n$ con $x_0=a$ e $x_n=b$.
-\item Somma aree trapezi $A_{tr}=\sum_{i=0}^{n-1} (x_{i+1}-x_i) \frac{f(x_i)+f(x_{i+1})}{2}=\frac{b-a}{n} \cdot \sum_{i=0}^{n-1} \frac{f(x_i)+f(x_{i+1})}{2}$
+\item \ifita Approssimo l'integrale \else Approximating integral \fi $\int_{a}^b f(x) \mathrm{d}x$ \ifita dividendo l'intervallo \else by dividing interval \fi $[a,b]$ in $n$ \ifita parti mediante gli \else parts by \fi $n+1$ \ifita punti \else points \fi $x_0,x_1,\ldots,x_n$ \ifita con \else where \fi $x_0=a$ e $x_n=b$.
+\item \ifita Somma aree trapezi \else Summing trapezoids areas \fi $A_{tr}=\sum_{i=0}^{n-1} (x_{i+1}-x_i) \frac{f(x_i)+f(x_{i+1})}{2}=\frac{b-a}{n} \cdot \sum_{i=0}^{n-1} \frac{f(x_i)+f(x_{i+1})}{2}$
 \end{itemize}
 
 
