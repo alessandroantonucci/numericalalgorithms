@@ -1,0 +1,129 @@
+\documentclass[professionalfonts]{beamer}
+\newif\ifita
+%\itatrue % comment out to hide answers
+\itafalse
+\input{mycommands.sty}
+%%%%%%%%%%%%%%%%%%%%%
+\ifita
+\title{Algoritmi Numerici (Parte III)}
+\subtitle{[Lezione 1] Sistemi Triangolari}
+\else
+\title{Numerics (Part III)}
+\subtitle{[Lecture 1] Triangular Linear Systems}
+\fi
+\date{}
+\author{Alessandro Antonucci\\{\tt alessandro.antonucci@supsi.ch}}
+\begin{document}
+\maketitle
+\setstretch{1.4}
+%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{\ifita Rappresentazione matriciale di un sistema lineare \else Matrix Representation of a Linear System \fi}
+\setstretch{1.6}
+$$\hat{A}=\left[ \begin{array}{ccc}  1 & -1 & 2\\ 2  & -1 & -1 \\ 1 & 1 & 1  \end{array} \right]
+\quad
+\vec{x} = 
+\left[ \begin{array}{c}  x_1 \\  x_2 \\  x_3 \end{array} \right]
+\quad
+\vec{b} = 
+\left[ \begin{array}{c}  2 \\  0 \\  3 \end{array} \right]$$
+\centering
+\begin{columns}
+\begin{column}[T]{0.3\textwidth} 
+$$\left\{ \begin{array}{c}  x_1 - x_2 + 2 x_3 = 2 \\ 2x_1-x_2-x_3=0  \\ x_1+x_2+x_3 = 3  \end{array} \right.$$
+\end{column}
+\begin{column}[T]{0.3\textwidth} 
+\vskip 10mm
+$$\hat{A}\cdot\vec{x}  = \vec{b}$$
+\end{column}
+\end{columns}}
+
+\frame{\frametitle{\ifita Rappr. matriciale di un sistema tringolare \else Matrix Representation of a Triangular System \fi
+}
+\setstretch{1.6}
+$$\hat{A}=\left[ \begin{array}{ccc}  1 & -1 & 2\\ 0  & -1 & -1 \\ 0 & 0 & 1  \end{array} \right]
+\quad
+\vec{x} = 
+\left[ \begin{array}{c}  x_1 \\  x_2 \\  x_3 \end{array} \right]
+\quad
+\vec{b} = 
+\left[ \begin{array}{c}  2 \\  0 \\  3 \end{array} \right]$$
+\centering
+\begin{columns}
+\begin{column}[T]{0.3\textwidth} 
+$$\left\{ \begin{array}{c}  x_1 - x_2 + 2 x_3 = 2 \\ \phantom{2x_1}-x_2-x_3=0  \\ \phantom{x_1+x_2+}x_3 = 3  \end{array} \right.$$
+\end{column}
+\begin{column}[T]{0.7\textwidth} 
+$$\left\{ \begin{array}{ll}  x_1 =& 2 + x_2 - 2 x_3 = 2-3-6=-7  \\ x_2 = &-x_3 = -3  \\ x_3 =& 3  \end{array} \right.$$
+\end{column}
+\end{columns}}
+
+\frame{\frametitle{\ifita Algoritmo di sostituzione \else Solving by Substitution \fi}
+\begin{itemize}
+\item INPUT: \ifita sistema triangolare \else triangular system \fi
+$\hat{A}$, $\vec{b}$ \ifita (con $\hat{A}$ triangolare) \else ($\hat{A}$ triangular)\fi
+\item OUTPUT: \ifita soluzione \else solution \fi $\vec{x}^*$ \ifita tale che \else such that \fi $\hat{A}\cdot\vec{x}^* = \vec{b}$
+\end{itemize}
+\vskip 3mm
+\ifita
+Sostituzione dal basso verso l'alto, da dx verso sx (fermandosi sulla diagonale)
+\else
+Bottom-up substitution + right-left\\ (stop just before the diagonal)
+\fi
+\vskip 3mm
+\begin{columns}
+\begin{column}[T]{0.4\textwidth}
+{\tt n} \ifita dimensione matrice \else matrix dimension \fi
+\vskip 1mm
+{\tt for i=n .. 1}
+\vskip 1mm
+{\tt \quad \quad for j=n .. i}
+\vskip 1mm
+{\tt \quad \quad \quad \quad x(i)= ...}
+\vskip 1mm
+{\tt \quad \quad end}
+\vskip 1mm
+{\tt end}
+\end{column}
+\begin{column}[T]{0.5\textwidth} 
+\centering\it
+\ifita 
+vettore delle soluzioni $\vec{x}^*$\\ricavato partendo\\dall'ultimo\\elemento
+\else
+solution vector $\vec{x}^*$\\obtained by starting from the last element
+\fi
+\end{column}
+\end{columns}}
+
+
+\frame{\frametitle{Manual $5 \times 5$ in Python $\ldots$}
+\lstinputlisting[
+language=Python,
+firstline=20,
+lastline=30
+]{e0.py}}
+
+\frame{\frametitle{\ifita Sostituzione \else Substitution \fi in Python $\ldots$}
+    \lstinputlisting[
+    language=Python,
+    firstline=0,
+    lastline=10
+    ]{subst.py}}
+
+
+\frame{\frametitle{\ifita Complessit\`a algoritmo di sostituzione \else Computational Complexity of Substitution\fi}
+\begin{itemize}
+\ifita
+\item Una divisione per ogni equazione ($n$ divisioni)
+\item Una sottrazione ed una moltiplicazione per ogni elemento sopra-diagonale
+\item Numero elementi sopra-diagonali $=\frac{n^2-n}{2}$
+\item Numero operazioni $=n+2\cdot \frac{n^2-n}{2}=n^2$
+\item Complessit\`a quadratica $O(n^2)$
+\else
+\item One division for each equation ($n$ divisions)
+\item One subtraction and one multiplication for each upper-diagonal element
+\item Upper-diagonal Elements $=\frac{n^2-n}{2}$
+\item Number of Basic Operations $=n+2\cdot \frac{n^2-n}{2}=n^2$
+\item Quadratic Complexity $O(n^2)$
+\fi
+\end{itemize}}
+\end{document}

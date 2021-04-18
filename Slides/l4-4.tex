@@ -1,0 +1,244 @@
+\documentclass[professionalfonts]{beamer}
+\usepackage[english]{babel}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{pgfplots}
+\usetikzlibrary{automata,topaths}
+\pgfplotsset{width=7cm,compat=1.8}
+\usepackage{pgfplotstable}
+\pgfmathsetseed{1138} % set the random seed
+\pgfplotstableset{ % Define the equations for x and y
+    create on use/x/.style={create col/expr={42+2*\pgfplotstablerow}},
+    create on use/y/.style={create col/expr={(0.6*\thisrow{x}+130)+5*rand}}
+}
+% create a new table with 30 rows and columns x and y:
+\pgfplotstablenew[columns={x,y}]{30}\loadedtable
+
+\input{mycommands.sty}
+%%%%%%%%%%%%%%%%%%%%%
+\title{Algoritmi Numerici (Parte IV)}
+\subtitle{Lezione 4: regressione lineare}
+\author{Alessandro Antonucci\\{\tt alessandro.antonucci@supsi.ch}}
+\date{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\maketitle
+\setbeamercovered{}
+
+\frame{\frametitle{Motivazioni}
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{itemize}
+\item Dati su peso e altezza di 30 persone
+\item Interpolazione poco significativa
+\item Regressione (lineare) per estrapolare conoscenza dai dati
+\end{itemize}
+\end{column}
+\begin{column}{0.6\textwidth}
+\begin{tikzpicture}
+\begin{axis} [
+xlabel     = Peso (kg),ylabel     = Altezza (cm),
+axis lines = left,clip= false,xmin = 40,xmax = 105,ymin = 150,ymax = 200.]
+\addplot [only marks] table {\loadedtable};
+\end{axis}
+\end{tikzpicture}   
+\end{column}
+\end{columns}}
+
+\frame{\frametitle{Motivazioni}
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{itemize}
+\item Dati su peso e altezza di 30 persone
+\item Interpolazione poco significativa
+\item Regressione (lineare) per estrapolare conoscenza dai dati
+\end{itemize}
+\end{column}
+\begin{column}{0.6\textwidth}
+\begin{tikzpicture}
+\begin{axis} [
+xlabel     = Peso (kg),ylabel     = Altezza (cm),
+axis lines = left,clip= false,xmin = 40,xmax = 105,ymin = 150,ymax = 200.]
+\addplot [mark=*] table {\loadedtable};
+\end{axis}
+\end{tikzpicture}   
+\end{column}
+\end{columns}}
+
+\frame{\frametitle{Motivazioni}
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{itemize}
+\item Dati su peso e altezza di 30 persone
+\item Interpolazione poco significativa
+\item Regressione (lineare) per estrapolare conoscenza dai dati
+\end{itemize}
+\end{column}
+\begin{column}{0.6\textwidth}
+\begin{tikzpicture}
+\begin{axis} [
+xlabel     = Peso (kg),ylabel     = Altezza (cm),
+axis lines = left,clip= false,xmin = 40,xmax = 105,ymin = 150,ymax = 200.]
+\addplot [only marks,mark=*] table {\loadedtable};
+%{\onslide<2->\addplot [mark=*] table {\loadedtable};}
+\addplot [only marks] table {\loadedtable};
+\addplot [no markers, thick, red]
+  table [y={create col/linear regression={y=y}}] {\loadedtable}
+  node [anchor=west] {};
+\end{axis}
+\end{tikzpicture}   
+\end{column}
+\end{columns}}
+
+\frame{\frametitle{Regressione lineare}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item Dati $n$ punti $\{ (x_i,y_i) \}_{i=1}^n$, cerco una funzione che descriva la relazione fra $x$ e $y$
+\item Relazione lineare: $y = m x + q$, ma come trovare $m$ e $q$? 
+\item
+Distanza sulla verticale fra punto e retta $\epsilon_i := y_i - mx_i - q$
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{tikzpicture}[domain=0:4]
+\draw[-] (0.5,1.6)--(3,3.3);
+\draw[->] (-0.2,0.9) -- (4.2,0.9) node[right] {$x$};
+\draw[->] (0,0.5) -- (0,4.2) node[above] {$y$};
+\draw[color=black,fill=black,very thick] (2,4) circle (0.07cm) node[above,yshift=5pt,fill=white]{$(x_i,y_i)$};
+\draw[color=black,fill=black,very thick] (2,2.65) circle (0.07cm);
+\draw[dotted](2,4)--(2,2.65);
+\draw (2.8,2.15) node[]{$(x_i,m x_i+q)$};
+\draw (1.8,3.3) node[]{$\epsilon_i$};
+\end{tikzpicture}
+\end{column}
+\end{columns}
+}
+
+
+\frame{\frametitle{Regressione lineare}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item Minimizzare $\sum_i \epsilon_i$ ?
+\item No, $\epsilon_i<0$ se punto sotto retta
+\item Meglio minimizzare $\sum_i \epsilon_i^2$
+\item Ottimizzazione funzione di due variabili ($m$ e $q$)
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{tikzpicture}[domain=0:4]
+\draw[-] (0.5,1.6)--(3,3.3);
+\draw[->] (-0.2,0.9) -- (4.2,0.9) node[right] {$x$};
+\draw[->] (0,0.5) -- (0,4.2) node[above] {$y$};
+\draw[color=black,fill=black,very thick] (2,4) circle (0.07cm); \draw[dotted](2,4)--(2,2.65);
+\draw[color=black,fill=black,very thick] (1.5,3.1) circle (0.07cm); 
+\draw[color=black,fill=black,very thick] (1.75,2.0) circle (0.07cm); 
+\draw[color=black,fill=black,very thick] (2.5,3.3) circle (0.07cm); 
+\draw[dotted](2.5,3.3)--(2.5,3);
+\draw[dotted](1.5,3.1)--(1.5,2.3);
+\draw[dotted](1.75,2.0)--(1.75,2.5);
+
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\begin{center}
+$F(m,q) = \sum_{i=1}^n \epsilon_i^2 = \sum_{i=1}^n (y_i-m x_i -q)^2$
+\end{center}
+}
+
+\frame{\frametitle{Ottimizzazione}
+\begin{itemize}
+\item Minimizzare/massimizzare $f(x)$? Pongo $\frac{\mathrm{d}f}{\mathrm{d}x}=0$
+\item Minimizzare/massimizzare $F(m,q)$? 
+$\frac{\mathrm{d}F}{\mathrm{d}m}=\frac{\mathrm{d}F}{\mathrm{d}q}=0$
+\end{itemize}
+$\left\{\begin{array}{lll}
+\frac{\mathrm{d}F}{\mathrm{d}q}&=-2 \sum_i (y_i-mx_i-q)&= 0\\
+\frac{\mathrm{d}F}{\mathrm{d}m}&=-2 \sum_i x_i (y_i-mx_i-q)&= 0
+\end{array}\right.$ 
+
+$\left\{\begin{array}{l}
+n \overline{y} - nm\overline{x} - nq= 0\\
+\sum_i x_i y_i -m \sum_i x_i^2 -q\sum_i x_i= 0
+\end{array}\right.$ 
+
+$\left\{\begin{array}{l}
+q = \overline{y}-m\overline{x} \\
+\sum_i x_i y_i -m \sum_i x_i^2 =n \overline{x} (\overline{y}-m\overline{x})
+\end{array}\right.$ 
+
+$\left\{\begin{array}{l}
+q = \overline{y}-m\overline{x} \\
+\sum_i x_i y_i -n \overline{x} \cdot \overline{y} = m (\sum_i x_i^2 -n \overline{x}^2)
+\end{array}\right.$ 
+
+\vskip 2mm
+
+con 
+$\overline{x} = \frac{\sum_i x_i}{n}$ e
+$\overline{y} = \frac{\sum_i y_i}{n}$
+}
+
+\frame{\frametitle{Regressione Lineare (formule)}
+\Large
+La retta \`e $y=mx+q$ 
+\vskip 5mm
+con
+\vskip 5mm
+$\left\{\begin{array}{l}
+q = \overline{y}-m\overline{x} \\
+m = \frac{\sum_i x_i y_i -n \overline{x} \cdot \overline{y}}{
+\sum_i x_i^2 -n \overline{x}^2}\end{array}\right.$
+\vskip 5mm
+e
+\vskip 5mm
+$\overline{x} = \frac{\sum_i x_i}{n}$ e
+$\overline{y} = \frac{\sum_i y_i}{n}$
+
+
+}
+
+
+
+
+\end{document}
+
+
+\end{document}
+\frame{\frametitle{Regressione lineare}
+\begin{itemize}
+\item $\sum_i \epsilon_i^2$ con $\epsilon_i = y_i - m x_i +q$ \`e una funzione di $m$ e $q$
+\item $F(m,q):= \sum_{i=1}^n (y_i - m x_i - q)^2$
+\item Cerco valore/i di $m$ e $q$ per cui la derivata rispetto a $m$ ed a $q$ sono nulle
+\begin{itemize}
+\item $\partial_q F = -2 \sum_i (y_i-m x_i -q) = 0$
+\item $\partial_m F = -2 \sum_i x_i (y_i -m x_i -q) = 0$
+\end{itemize}
+\end{itemize}
+}
+
+
+\frame{
+
+
+\frame{\frametitle{a}
+\begin{equation}
+\left\{ \begin{array}{l} \sum_i y_i - m \sum_i x_i - n q = 0\\ \sum_i x_i y_i - m \sum_i x_i^2 - n q \end{array} \right.
+\end{equation}
+
+Definisco i valori medi $\overline{x} := \sum_i x_i / n$ e $\overline{y} := \sum_i y_i$.
+
+\begin{equation}
+\left\{ \begin{array}{l} \overline{y} = m \overline{x} + q \\ \sum_i x_i y_i - m \sum_i x_i^2 - n \overline{y} - n m \overline{x} \end{array} \right.
+\end{equation}
+
+da cui
+\begin{equation}
+\left\{ \begin{array}{l} 
+q = \overline{y} - m \overline{x} + q \\
+m = \frac{\sum_i x_i y_i - m \sum_i x_i^2 }{- n \overline{y} - n m \overline{x} }
+\end{array} \right.
+\end{equation}
+}
+\end{document}

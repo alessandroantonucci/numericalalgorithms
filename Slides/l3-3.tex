@@ -1,0 +1,245 @@
+\documentclass[professionalfonts]{beamer}
+\newif\ifita
+\itatrue % comment out to hide answers
+%\itafalse
+\input{mycommands.sty}
+%%%%%%%%%%%%%%%%%%%%%
+\ifita
+\title{Algoritmi Numerici (Parte III)}
+\subtitle{[Lezione 2] Metodo di Eliminazione di Gauss}
+\else
+\title{Numerics (Part III)}
+\subtitle{[Lecture 2] Gaussian Elimination Algorithm}
+\fi
+\date{}
+\author{Alessandro Antonucci\\{\tt alessandro.antonucci@supsi.ch}}
+\begin{document}
+\maketitle
+\setstretch{1.4}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{\ifita Algoritmo di Sostituzione \else Solving by Substitution \fi}
+\ifita
+Sistema triangolare si risolve per \evi{sostituzione} (dal basso verso l'alto) 
+\else
+Triangular system solved by (bottom-up) \evi{substitution}
+\fi
+$$\hat{A}=\left[ \begin{array}{ccc}  1 & -1 & 2\\ 0  & -1 & -1 \\ 0 & 0 & 1  \end{array} \right]
+\quad
+\vec{x} = 
+\left[ \begin{array}{c}  x_1 \\  x_2 \\  x_3 \end{array} \right]
+\quad
+\vec{b} = 
+\left[ \begin{array}{c}  2 \\  0 \\  3 \end{array} \right]$$
+\begin{columns}
+\begin{column}[]{0.3\textwidth} 
+$$\left\{ \begin{array}{c}  x_1 - x_2 + 2 x_3 = 2 \\ \phantom{2x_1}-x_2-x_3=0  \\ \phantom{x_1+x_2+}x_3 = 3  \end{array} \right.$$
+\end{column}
+\begin{column}[]{0.7\textwidth} 
+$$\left\{ \begin{array}{ll}  x_1 =& 2 + x_2 - 2 x_3 = 2-3-6=-7  \\ x_2 = &-x_3 = -3  \\ x_3 =& 3  \end{array} \right.$$
+\end{column}
+\end{columns}
+\vskip 2mm
+\centering
+\ifita complessit\`a $O(N^2)$ \else $O(N^2)$ complexity \fi
+}
+%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{\ifita Problema Generale \else General Problem \fi}
+\ifita Dato un sistema qualunque (= non triangolare)
+\else General (non-triangular) linear system
+\fi 
+$$\hat{A}=\left[ \begin{array}{ccc}  1 & -1 & 2\\ 2  & -1 & -1 \\ 1 & 1 & 1  \end{array} \right]
+\quad
+\vec{x} = 
+\left[ \begin{array}{c}  x_1 \\  x_2 \\  x_3 \end{array} \right]
+\quad
+\vec{b} = 
+\left[ \begin{array}{c}  2 \\  0 \\  3 \end{array} \right]$$
+
+\begin{itemize}
+\ifita
+\item IDEA: trasformare sistema in triangolare \evi{equivalente}
+\item Equivalente = stesse soluzioni
+\item Trasformazioni equivalenti = cambiano aspetto sistema\\ non le soluzioni
+\else
+\item IDEA: Make the system a \evi{equivalent} linear system
+\item Equivalent = same solutions
+\item Equivalent transformations = system changes aspect\\ but the solution is the same
+\fi
+\end{itemize}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{\ifita Due Trasformazioni Equivalenti \else Two Equivalent Transformations \fi}\small
+\begin{columns}
+\begin{column}[T]{0.5\textwidth} 
+$\left\{ \begin{array}{c}  x_1 - x_2 + 2 x_3 = 2 \\ 2x_1-x_2-x_3=0  \\ x_1+x_2+x_3 = 3  \end{array} \right.$
+\end{column} 
+\begin{column}[T]{0.5\textwidth} 
+``Box'' \quad$\begin{array}{|ccc|c|}  \hline 1 & -1 & 2 &2\\ 2  & -1 & -1 &0 \\ 1 & 1 & 1 &3\\ \hline \end{array}$
+\end{column}
+\end{columns}
+\begin{itemize}
+\item Swap row 1 $\iff$ row 2
+\end{itemize}
+$\left\{ \begin{array}{c} 2x_1-x_2-x_3=0  \\   x_1 - x_2 + 2 x_3 = 2 \\   x_1+x_2+x_3 = 3  \end{array} \right.$
+$\begin{array}{|ccc|c|}  \hline 2  & -1 & -1 &0 \\ 1 & -1 & 2 &2\\ 1 & 1 & 1 &3\\ \hline \end{array}$
+\begin{itemize}
+    \item $3.0$ $\times$ row 2
+\end{itemize}
+$\left\{ \begin{array}{c}  x_1 - x_2 + 2 x_3 = 2 \\ 6x_1-3x_2-3x_3=0  \\ x_1+x_2+x_3 = 3  \end{array} \right.$
+$\begin{array}{|ccc|c|}  \hline 1 & -1 & 2 &2\\ 6  & -3 & -3 &0 \\ 1 & 1 & 1 &3\\ \hline \end{array}$
+}
+
+\frame{\frametitle{\ifita Trasformazioni Equivalenti\else Equivalent Transformations \fi}
+\begin{columns}
+\begin{column}[T]{0.5\textwidth} 
+IF $a = b$
+\vskip 2mm
+THEN $a + 2 = b + 2$
+\vskip 4mm
+IF $a = b$ e $c = d$ \vskip 2mm
+THEN $a + c = b + d$
+\end{column}
+\begin{column}[T]{0.5\textwidth} 
+\begin{block}{\ifita REGOLE \else RULES \fi}
+\begin{itemize}
+\ifita
+\item Riga per costante
+\item Riga meno (pi\`u) altra riga
+\item Swap righe
+\else
+\item Row by constant
+\item Row minus (plus) row
+\item Swapping Rows
+\fi
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+\vskip 4mm
+\begin{itemize}
+\ifita
+\item Posso sommare ad un'equazione un'altra
+equazione senza che la soluzione del sistema cambi
+\item Gauss = trasformazioni equivalenti
+per rendere triangolare un sistema qualunque
+\else
+\item We can sum an equation to another one\\without changing the solution
+\item Gauss = equivalent transformations\\
+to make triangular a generic system
+\fi
+\end{itemize}}
+
+
+\frame{\frametitle{Gauss (2$\times$2)}
+\begin{columns}
+\begin{column}[T]{0.7\textwidth} 
+\begin{itemize}
+\ifita
+\item Rendere il sistema triangolare? \emph{Annichilire} (rendere nullo) l'elemento dalla seconda riga prima colonna
+\item Sottraggo alla seconda riga la prima moltiplicata per $k$
+\item Con $k=\frac{2}{5}$ l'elemento in riga2-col1 si annichila
+\else
+\item Make the system triangular? \emph{annihilate} (make zero) the element in the second row and first column
+\item Second row minus first row multiplied by $k$
+\item With $k=\frac{2}{5}$ the element in row2-col1 becomes zero
+\fi
+\end{itemize}
+\end{column}
+\begin{column}[T]{0.3\textwidth} 
+$$\begin{array}{|cc|c|}  \hline 5 & 2 & -3\\ 2  & 1 & 6 \\ \hline \end{array}$$
+$$\begin{array}{|cc|c|}  \hline 5 & 2 & -3\\ 0  & 1-\frac{4}{5} & 6+\frac{6}{5} \\ \hline \end{array}$$
+$$\begin{array}{|cc|c|}  \hline 5 & 2 & -3\\ 0  & \frac{1}{5} & \frac{36}{5} \\ \hline \end{array}$$
+\end{column}
+\end{columns}
+}
+
+
+\frame{\frametitle{Gauss (3$\times$3)}
+\begin{columns}
+\begin{column}[T]{0.5\textwidth}
+\begin{itemize}
+\item
+\ifita
+Annichilisco i (due) elementi non diagonali della prima colonna
+\else
+Annihilating the two non-diagonal elements of the first column
+\fi
+\end{itemize}
+\end{column}
+\begin{column}[T]{0.5\textwidth} 
+$\begin{array}{|ccc|c|}  \hline 2  & -1 & -1 &0 \\ 1 & -1 & 2 &2\\ 3 & 1 & 1 &3\\ \hline \end{array}$
+\end{column}
+\end{columns}
+\vskip 3mm
+\begin{columns}
+\begin{column}[T]{0.5\textwidth} 
+\begin{itemize}
+\item
+\ifita Seconda riga meno prima moltiplicata per \else Second row minus first multiplied by \fi $k=\frac{1}{2}$
+\end{itemize}
+\end{column}
+\begin{column}[T]{0.5\textwidth} 
+$\begin{array}{|ccc|c|}  \hline 2  & -1 & -1 &0 \\ 0 & -\frac{1}{2} & \frac{5}{2} &2\\ 3 & 1 & 1 &3\\ \hline \end{array}$
+\end{column}
+\end{columns}
+\vskip 3mm
+\begin{columns}
+\begin{column}[T]{0.5\textwidth} 
+\begin{itemize}
+    \item
+\ifita Terza riga meno prima moltiplicata per 
+\else Third row minust first multiplied by \fi
+$k=\frac{3}{2}$
+\end{itemize}
+\end{column}
+\begin{column}[T]{0.5\textwidth} 
+$\begin{array}{|ccc|c|}  \hline 2  & -1 & -1 &0 \\ 0 & -\frac{1}{2} & \frac{5}{2} &2\\ 0 & \frac{5}{2} & \frac{5}{2} &3\\ \hline \end{array}$
+\end{column}
+\end{columns}
+\centering
+\begin{itemize}
+{\small
+\item \ifita
+Sistema non ancora triangolare, ma ultime due righe\\sono sistema 2$\times$2, 
+agisco ricorsivamente!
+\else
+Not triangular, but last rows are $2\times 2$ system, go recursive!
+\fi}
+\end{itemize}
+
+}
+\frame{\frametitle{Gauss in Python}
+\lstinputlisting[
+language=Python,
+firstline=0,
+lastline=10
+]{./Pics/gauss.py}
+%\lstinputlisting[language=Java]{a.java}
+\vskip 2mm
+\begin{center}
+\ifita Tre cicli for nidificati, complessit\`a $O(n^3)$
+\else Three nested for loops, complexity $O(n^3)$\fi
+\end{center}
+}
+
+\frame{\frametitle{\ifita Scelta del Pivot \else Picking the Pivot \fi}
+\setstretch{1.4}
+\begin{itemize}
+\ifita
+\item Se ${\tt pivot=0}$, ${\tt coeff}$ non pu\`o essere calcolato
+\item Se ${\tt pivot}$ \`e piccolo, ${\tt coeff}$ \`e grande
+\item L'equazione del {\tt pivot} viene moltiplicata per ${\tt coeff}$,\\ ${\tt coeff}$ grande introduce imprecisione nella rappresentazione
+\item Swap di riga e colonna permettono di cambiare il pivot
+\item Swap pivot $A_{kk}$ con elemento pi\`u grande in valore assoluto $A_{i^*j^*}$ 
+\else
+\item If ${\tt pivot=0}$, ${\tt coeff}$ cannot be computed
+\item If ${\tt pivot}$ is small, ${\tt coeff}$ is big
+\item {\tt pivot} equation multiplied by ${\tt coeff}$,\\ big ${\tt coeff}$ add imprecision in the representation
+\item Swapping rows and/or cols allow to change the pivot
+\item Swapping pivot $A_{kk}$ with biggest value (in abs value) $A_{i^*j^*}$ 
+\fi
+$$(i^*,j^*) = \arg \max_{\substack{i=k,\ldots,n \\ j=k,\dots,n}} |A_{ij}|$$
+\end{itemize}}
+\end{document}

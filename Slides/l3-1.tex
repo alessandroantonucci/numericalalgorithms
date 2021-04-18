@@ -1,0 +1,205 @@
+\documentclass[professionalfonts]{beamer}
+\newif\ifita
+%\itatrue % comment out to hide answers
+\itafalse
+\input{mycommands.sty}
+%%%%%%%%%%%%%%%%%%%%%
+\ifita
+\title{Algoritmi Numerici (Parte III)}
+\subtitle{[Lezione 0] Basi di Calcolo Matriciale}
+\else
+\title{Numerics (Part III)}
+\subtitle{[Lecture 0] Linear Algebra Basics}
+\fi
+\date{}
+\author{Alessandro Antonucci\\{\tt alessandro.antonucci@supsi.ch}}
+\begin{document}
+\maketitle
+\setstretch{1.4}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{\ifita Vettori \else Vectors \fi}
+\begin{itemize}
+\ifita
+\item Vettore (array): una sequenza ordinata di numeri (reali)
+\item Dimensione del vettore: numero di elementi nella sequenza 
+\item Distinguiamo vettori riga (``orizzontali'') \\ e vettori colonna (''verticali'')
+\item Trasposizione: trasforma una riga in una colonna e v.v.
+\else
+\item Vector (array): ordered sequence of (real) numbers
+\item Vector size: number of elements in the sequence
+\item We distinguish ``row'' vectors (horizontal) \\ from ``col'' vectors (vertical)
+\item Transpose: swap rows and cols (and vice versa)
+\fi
+\end{itemize}
+\vskip 4mm
+$$\vec{x}=[1 \quad 4 \quad 0] \quad \vec{x}^t = \left[ \begin{array}{c} 1 \\ 4 \\ 0 \end{array} \right]$$
+$$len(\vec{x})=3 \quad (\vec{x})_1 = 1 \quad (\vec{x})_2 = 4$$}
+
+\frame{\frametitle{\ifita Calcolo Vettoriale \else Vector Calculus \fi}
+\begin{itemize}
+\item \ifita Scalare: ``array con un solo elemento'' \else Scalar: single-element array \fi
+\item \ifita Moltiplicare uno scalare per un array \`e operazione \emph{elementwise} \else
+Multiplying an array by a scalar (elementwise operation) \fi
+	$$(\alpha \vec{x})_i = \alpha \, (\vec{x})_i$$
+\item \ifita Sommare due array \`e anche operazione \emph{elementwise} \else
+Summing two arrays (also elementwise)
+\fi
+$$(\vec{x}+\vec{y})_i = (\vec{x})_i + (\vec{y})_i$$
+\item \ifita Moltiplicare due array (una riga per una colonna) non elementwise\else 
+Product of two arrays (row by col) not elementwise\fi
+$$\vec{x} \cdot \vec{y} = \sum_i (\vec{x})_i (\vec{y})_i$$
+\end{itemize}}
+
+\frame{\frametitle{\ifita Calcolo vettoriale (esercizi)\else Vector Calculus (exe)\fi}
+\begin{itemize}
+\item $\alpha = 3$,   $\vec{x}=[1 \quad 4 \quad 0]$, $\vec{y} = \left[ \begin{array}{c} 2 \\ 1 \\ -1 \end{array} \right]$, $\vec{z} = \left[ \begin{array}{c} 1 \\ 0 \\ 2 \end{array} \right]$
+\item $\alpha \vec{y} = \left[ \begin{array}{c} 6 \\ 3 \\ -3 \end{array} \right]$
+\quad 
+$\vec{y} + \vec{z} = \left[ \begin{array}{c} 3 \\ 1 \\ 1 \end{array} \right]$
+\vskip 2mm
+\item $\vec{x} \cdot \vec{y} = 6 \quad \vec{x} \cdot \vec{z} = 1$
+\item $\vec{y} \cdot \vec{z}=?$\quad\quad
+\ifita a rigore non si pu\`o \else strictly speaking not possible \fi
+\end{itemize}}
+
+\frame{\frametitle{\ifita Matrici \else Matrices \fi}
+\begin{itemize}
+\item \ifita Matrice: ``array di array'' \else Matrix = array of arrays \fi
+\item \ifita Dimensioni: numero di righe e numero di colonne \else Dimensions: number of rows and cools \fi\\
+\ifita
+$\hat{A}$ matrice con $n$ righe e $m$ colonne:
+\else
+$\hat{A}$ matrix with $n$ rows and $m$ cols:
+\fi
+ $dim(\hat{A})=[n,m]$
+\item $dim(\hat{A})=[n,n]$?\quad
+ $\hat{A}$ \ifita quadrata \else square matrix \fi
+ \\
+\end{itemize}
+\vskip 4mm
+$$\hat{A}= \left[ \begin{array}{ccc} 1 & 4 & 2\\ 4 & 1 &3 \\ 5&2&0 \end{array} \right]\quad
+\hat{B}= \left[ \begin{array}{cc}  3 & 2\\ 1 & 2 \\ 5&0 \end{array} \right]\quad
+\hat{C}= \left[ \begin{array}{ccc} 3 & 2 &0  \\ 1&4&1 \end{array} \right]$$
+	$$dim(\hat{A})=[3,3] \quad dim(\hat{B})=[3,2] \quad dim(\hat{C})=[2,3]$$
+	$$(\hat{A})_{1,2}=4 \quad (\hat{B})_{3,1}=5 \quad (\hat{C})_{2,3}=1 $$}
+\frame{\frametitle{\ifita Tipi di matrici\else Kind of Matrices\fi}
+\setstretch{1.4}
+\begin{itemize}
+\ifita
+\item Diagonale di una matrice (quadrata): array degli elementi con uguale indice di riga e colonna
+\item Matrice triangolare superiore (es. $\hat{A}$): matrice che ha elementi non nulli solo sulla diagonale e sopra di essa
+\item Matrice triangolare inferiore (es. $\hat{C}$): matrice che ha elementi non nulli solo sulla diagonale e sotto di essa
+\item Matrice diagonale (es. $\hat{B}$): matrice simultaneamente diagonale superiore ed inferiore
+\else
+\item Diagonal (of a square matrix): array of elements\\with same row and col index
+\item Upper triangular matrix (ex. $\hat{A}$): elements under the diagonal are all zero
+\item Lower triangular matrix (ex. $\hat{C}$): elements over the diagonal are all zero
+\item Diagonal matrix (ex. $\hat{B}$): matrix at the same time\\upper and lower triangular
+\fi
+\end{itemize}
+\vskip 4mm
+$$\hat{A}= \left[ \begin{array}{ccc} 1 & 4 & 2\\ 0 & 1 &3 \\ 0&0&3 \end{array} \right]\quad
+\hat{B}= \left[ \begin{array}{ccc} 1 & 0 & 0\\ 0 & 1 &0 \\ 0&0&3 \end{array} \right]\quad
+\hat{C}= \left[ \begin{array}{ccc} 1 & 0 & 0\\ 5 & 1 &0 \\ 2&1&3 \end{array} \right]$$}	
+
+\frame{\frametitle{\ifita Calcolo matriciale\else Matrix Calculus \fi}
+\setstretch{1.2}
+\begin{itemize}
+\item \ifita Moltiplicare uno scalare per una matrice \`e operazione \emph{elementwise} 
+\else
+Matrix (elementwise) multiplication by a scalar
+\fi
+$$(\alpha \hat{A})_{ij} = \alpha \, (\hat{A})_{ij}$$
+\item 
+\ifita
+Sommare due matrici \`e anche operazione \emph{elementwise}
+\else
+(Elementwise) Sum of two matrices
+\fi
+$$(\hat{A}+\hat{B})_{ij} = (\hat{A})_{ij} + (\hat{B})_{ij}$$
+\item \ifita Moltiplicare due matrici non lo \`e!
+\else
+Matrix multiplication (not elementwise!)
+\fi
+$$(\hat{A} \cdot \hat{B})_{ij} = \sum_k (\hat{A})_{ik} (\hat{B})_{kj}$$
+\item \ifita {\footnotesize $dim(\hat{A})=[n_A,m_A]$ ,  $dim(\hat{B})=[n_B,m_B]$,  $dim(\hat{A}\cdot \hat{B}) = [n_A,m_B]$\\
+le matrici possono essere moltiplicate solo se $m_A=n_B$}
+\else
+{\footnotesize $dim(\hat{A})=[n_A,m_A]$ ,  $dim(\hat{B})=[n_B,m_B]$ , $dim(\hat{A}\cdot \hat{B}) = [n_A,m_B]$\\
+matrices can be multiplied iff $m_A=n_B$}
+\fi
+\end{itemize}}
+
+\frame{\frametitle{\ifita Calcolo matriciale (esercizi) \else Matrix Calculus (exe) \fi}
+\setstretch{1.4}
+$$\alpha = 3 \quad \hat{A}= \left[ \begin{array}{ccc} 1 & -1 & 2\\ 1 & 0 & 2 \\ 1 & 2 & 0 \end{array} \right]\quad
+\hat{B}= \left[ \begin{array}{ccc} 1 & 1 & 3\\ 2 & 1 & 0 \\ 1 & -1 & 2 \end{array} \right]$$
+$$\alpha \cdot \hat{A}= \left[ \begin{array}{ccc} 3 & -3 & 6\\ 3 & 0 & 6 \\ 3 & 6 & 0 \end{array} \right]
+\quad	
+\hat{A} \cdot \hat{B}= \left[ \begin{array}{ccc}  1 & -2  & 7\\ 3 &-1  & 7 \\ 5 & 3 &3  \end{array} \right]$$
+\begin{itemize}
+\item \ifita Esercizio: verificare che \else Exercise: Check \fi $\hat{A}\cdot\hat{B}\neq \hat{B}\cdot\hat{A}$
+\end{itemize}}
+
+\frame{\frametitle{\ifita La matrice identit\`a \else Identity Matrix \fi}
+\setstretch{1.2}
+\begin{itemize}
+\item \ifita Matrice \emph{identit\`a} $\hat{I}$: matrice diagonale, tutti uno sulla diagonale
+\else
+Identity matrix $\hat{I}$: diagonal matrix, ones on the diagonal
+\fi
+\item \ifita L'identit\`a \`e l'elemento neutro del prodotto:
+\else
+Identity as neutral element
+\fi
+ $\hat{I}\cdot \hat{A} = \hat{A} \cdot \hat{I} = \hat{A}$
+$$\left[ \begin{array}{ccc}  1 & 0  & 0\\ 0 &1  & 0 \\ 0 & 0 &1  \end{array} \right]
+\cdot \left[ \begin{array}{ccc}  3 & 1  & 2\\ 1 &2  & 1 \\ 2 & 0 &1  \end{array} \right]
+= \left[ \begin{array}{ccc}  3 & 1  & 2\\ 1 &2  & 1 \\ 2 & 0 &1  \end{array} \right]$$
+$$\left[ \begin{array}{ccc}  3 & 1  & 2\\ 1 &2  & 1 \\ 2 & 0 &1  \end{array} \right]
+\cdot
+\left[ \begin{array}{ccc}  1 & 0  & 0\\ 0 &1  & 0 \\ 0 & 0 &1  \end{array} \right]
+= \left[ \begin{array}{ccc}  3 & 1  & 2\\ 1 &2  & 1 \\ 2 & 0 &1  \end{array} \right]$$
+\end{itemize}}
+
+\frame{\frametitle{\ifita La matrice inversa \else Inverse Matrix \fi}
+\setstretch{1.2}
+\begin{itemize}
+\item 
+\ifita Dato uno scalare $k$, il suo \emph{reciproco} $k^{-1}$ \`e un numero tale che
+\else
+Given scalar $k$, its \emph{reciprocal} $k^{-1}$ is a number such that
+\fi
+ $$k \cdot k^{-1} = k^{-1} \cdot k = 1$$
+\item \ifita
+Data una matrice $\hat{A}$, la sua \emph{inversa} $\hat{A}^{-1}$ \`e una matrice tale che 
+\else
+Given matrix $\hat{A}$, its \emph{inverse} $\hat{A}^{-1}$ is such that \fi
+$$\hat{A} \cdot \hat{A}^{-1} = \hat{A}^{-1} \cdot \hat{A} = \hat{I}$$
+\item \ifita Invertire una matrice non \`e banale (e gli algoritmi che studieremo ci serviranno proprio a questo)
+\else
+Matrix inversion is not trivial, the algorithms we will study are basically intended to do that
+\fi
+$$\hat{A}=\left[ \begin{array}{ccc}  1 & 1  & 1\\ 0 &1  & 1 \\ 1 & 0 &1  \end{array} \right]
+\quad
+\hat{A}^{-1}=
+\left[ \begin{array}{ccc}  1 & -1  & 0\\ 1 &0  & -1 \\ -1 & 1 &1  \end{array} \right]$$
+\end{itemize}}
+
+\frame{\frametitle{\ifita Rappresentazione matriciale di un sistema lineare \else
+Matrix Representation of a Linear System \fi    
+}
+\setstretch{1.6}
+$$\hat{A}=\left[ \begin{array}{ccc}  1 & -1 & 2\\ 2  & -1 & -1 \\ 1 & 1 & 1  \end{array} \right]
+\quad
+\vec{x} = 
+\left[ \begin{array}{c}  x_1 \\  x_2 \\  x_3 \end{array} \right]
+\quad
+\vec{b} = 
+\left[ \begin{array}{c}  2 \\  0 \\  3 \end{array} \right]$$
+$$\hat{A}\cdot\vec{x}  = \vec{b}$$
+$$\left\{ \begin{array}{c}  x_1 - x_2 + 2 x_3 = 2 \\ 2x_1-x_2-x_3=0  \\ x_1+x_2+x_3 = 3  \end{array} \right.
+\quad
+\vec{x} = \hat{A}^{-1}\cdot \vec{b} = \left[ \begin{array}{c}  1 \\  1 \\  1 \end{array} \right]$$
+}
+\end{document}

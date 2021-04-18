@@ -1,0 +1,130 @@
+\documentclass[professionalfonts]{beamer}
+\newif\ifita
+%\itatrue
+\itafalse
+\input{mycommands.sty}
+\ifita
+\title{Algoritmi Numerici (Parte II)}
+\subtitle{[Lezione 5] Convergenza}
+\else
+\title{Numerics (Part II)}
+\subtitle{[Lecture 5] Convergence}
+\fi
+\date{}
+\author{Alessandro Antonucci\\{\tt alessandro.antonucci@supsi.ch}}
+\begin{document}
+\maketitle
+\setstretch{1.4}
+
+\setstretch{1.4}
+\frame{\frametitle{\ifita Convergenza \else Convergence \fi} 
+\ifita
+Una successione di valori $x_0,x_1,x_2,\ldots$ converge verso un valore $x^*$ se la distanza/errore
+$\epsilon_k := \mid x_k-x^*\mid$ tende sempre pi\`u ad avvicinarsi a zero con il
+crescere di $k$
+$$\lim_{k\to+\infty} \epsilon_k = 0$$
+Un algoritmo iterativo per la ricerca degli zeri di
+una funzione genera una successione di valori $x_0,x_1,x_2,\ldots$,\\
+tale che, quando converge, lo fa verso uno zero $x^*$ di $f$
+\else
+A sequence
+$x_0,x_1,x_2,\ldots$ \evi{converges} to $x^*$ if the distance/error
+$\epsilon_k := \mid x_k-x^*\mid$ tends to zero for increasing $k$
+$$\lim_{k\to+\infty} \epsilon_k = 0$$
+When converging, an iterative algorithm to find the zero of $f$ outputs a sequence $x_0,x_1,x_2,\ldots$,
+converging to $x^*$
+\fi
+}
+
+\frame{\frametitle{\ifita Ordine di convergenza \else Convergence Order \fi}
+\ifita
+Un algoritmo
+iterativo ha ordine di convergenza $p$ se esistono due numeri $C\geq
+0$ e $p\geq 0$ tali che $$\lim_{k\rightarrow\infty}
+\frac{e_{k+1}}{e_k^p}=C,$$ ovvero $|x_{k+1}-x^*|<C |x_k-x^*|^p$
+\vskip 2mm
+Se $p=1$ si dice che l'ordine di convergenza
+\`e lineare\\ superlineare con $1<p<2$, quadratico con $p=2$
+\else
+An iterative algorithm has \evi{convergence order} $p$ if there are two numbers $C\geq
+0$ e $p\geq 0$ such that $$\lim_{k\rightarrow\infty}
+\frac{e_{k+1}}{e_k^p}=C,$$ that means $|x_{k+1}-x^*|<C |x_k-x^*|^p$
+\vskip 2mm
+If $p=1$ we say that the convergence is linear, \\ superlinear with $1<p<2$, quadratic with $p=2$
+\fi
+}
+
+\frame{\frametitle{\ifita Convergenza dei vari algoritmi \else Algorithms Convergence \fi}
+\begin{itemize}
+\ifita
+\item L'algoritmo della bisezione e le sue varianti convergono linearmente ($p=1$)
+\item L'algoritmo della secante converge superlinearmente\\
+($p=\frac{1+\sqrt{5}}{2} \simeq 1.618$)
+\item L'algoritmo della tangente converge quadraticamente ($p=2$)
+\else
+\item Bisection and its variants converge linearly ($p=1$)
+\item Secant method converges superlinearly\\
+($p=\frac{1+\sqrt{5}}{2} \simeq 1.618$)
+\item Tangent method quadratically ($p=2$)
+\fi
+\end{itemize}}
+
+\frame{\frametitle{\ifita Convergenza su punti a tangenza orizzontale\else Slow Convergence on zero-derivative points\fi}
+\begin{itemize}
+\ifita
+\item Se $f'(x^*)=0$ (zero con tangente orizzontale), l'algoritmo della tangente ``rallenta'' e la convergenza \`e lineare e non quadratica
+\item Es. con $f(x)=x^2$, $f(x)=2x$ allora $x^*=0$ e $f'(x^*)=0$.
+\else
+\item If $f'(x^*)=0$ (zero of $f$ with horizontal tangent), tangent method becomes "slow" and convergence is linear (instead of quadratic)
+\item Ex. $f(x)=x^2$, $f'(x)=2x$ then $x^*=0$ and $f'(x^*)=0$.
+\fi
+\end{itemize}
+\vskip 1mm
+\centering
+	\small
+\begin{tabular}{cccc}
+$k$&$x_k$&$f(x_k)$&$f'(x_k)$\\
+	\hline
+$0$	& $1$	&$1$&$2$\\
+$1$	& $1-\frac{1}{2}=\frac{1}{2}$&$\frac{1}{4}$&$1$\\
+$2$	&$\frac{1}{2}-\frac{\frac{1}{4}}{1}=\frac{1}{4}$&$\frac{1}{16}$&$\frac{1}{2}$\\
+$3$	&$\frac{1}{4}-\frac{\frac{1}{16}}{\frac{1}{2}}=\frac{1}{8}$\\
+\end{tabular}
+\ifita
+\vskip 1mm	\emph{Ogni iterazione dimezza l'errore, convergenza lineare!}
+\vskip 1mm la stessa cosa succede con l'algoritmo della secante
+\else
+\vskip 1mm	\emph{Each iteration makes the error (roughly)\\half of the previous error, linear convergence!}
+\begin{itemize}
+\item The same happens with secant method
+\end{itemize}
+\fi
+}
+
+\frame{\frametitle{\ifita In Pratica \else In practice \fi $\ldots$}
+\begin{itemize}
+\ifita
+\item Itera l'algoritmo e genera $x_0,x_1,\ldots,x_n$
+\item Se la sequenza converge (a $x^*$) calcola\\la sequenza degli errori $\epsilon_0,\epsilon_1,\ldots,\epsilon_n$\\con $\epsilon_j:=|x_j-x^*|$
+\item Calcola la sequenza dei rapporti fra gli errori
+$\gamma_0,\gamma_1,\ldots,\gamma_n$ con $\gamma_j:=\epsilon_j/\epsilon_{j-1}$
+\item Se la sequenza dei rapporti va a zero, allora la convergenza \`e pi\`u che lineare, altrimenti \`e lineare
+\item Per capire se la convergenza \`e quadratica o solo superlineare occorre valutare anche
+$\gamma_j^p:=\epsilon_j/\epsilon_{j-1}^p$
+\else
+\item Iterate the algorithm to generate $x_0,x_1,\ldots,x_n$
+\item If the sequence converges (to $x^*$) compute\\the sequence of errors $\epsilon_0,\epsilon_1,\ldots,\epsilon_n$\\where $\epsilon_j:=|x_j-x^*|$
+\item Compute the sequence of error ratios
+$\gamma_0,\gamma_1,\ldots,\gamma_n$ where $\gamma_j:=\epsilon_j/\epsilon_{j-1}$
+\item If the ratio sequence goes to zero,\\then convergence is superlinear, linear otherwise
+\item To decide whether convergence is quadratic or just superlinear, you also need 
+$\gamma_j^p:=\epsilon_j/\epsilon_{j-1}^p$ (for various $p$)
+\fi
+\end{itemize}
+
+
+}
+
+
+
+\end{document}

@@ -1,0 +1,77 @@
+\documentclass[a4paper,12pt]{amsart}
+\usepackage[a4paper]{geometry}
+\geometry{ a4paper, total={170mm,257mm}, left=20mm, top=20mm, }
+\usepackage[familydefault,light]{Chivo}
+\usepackage{setspace}
+\begin{document}
+\onehalfspacing
+\renewcommand{\baselinestretch}{1.5} 
+\clearpage\thispagestyle{empty}
+\begin{center}
+{\Large \bf ::: FORMULARIO :::}
+\end{center}
+
+\vskip 3mm
+\paragraph{\bf ::: Premessa :::}
+\begin{itemize} 
+\item Input: $\{x_0,x_1,\ldots,x_n\}$ e $\{y_0,y_1,\ldots,y_n\}$ (coordinate dei punti).
+\item $n+1$ punti che definiscono $n$ intervalli.
+\end{itemize}
+\vskip 3mm
+\paragraph{\bf ::: Interpolazione polinomiale :::}
+\begin{itemize} 
+\item Polinomio interpolante di grado $n$:
+$$p(x):=\sum_{i=0}^n c_i \left[ \prod_{j=0}^{i-1} (x-x_j) \right]$$
+Es. se $n=2$ (3 punti), $p(x)=c_0+c_1(x-x_0)+c_2(x-x_0)(x-x_1)$.
+\item I parametri $\{c_0,c_1,\ldots,c_n\}$ si cacolano (in tempo quadratico e spazio lineare) con lo schema di calcolo a piramide.
+\end{itemize}
+
+\subsection*{\bf ::: Spline quadratica :::}
+\begin{itemize}
+\item Per $x\in[x_k,x_{k+1}]$, ho la parabola:
+$$f_k(x):= y_k+z_k(x-x_k)+\frac{z_{k+1}-z_k}{2(x_{k+1}-x_k)} (x-x_k)^2$$
+per ogni $k=0,...,n-1$ (complessivamente $n$ parabole).
+\item I parametri $z_0,\ldots,z_n$ (intepretazione $z_k:=f'(x_k)$) si ricavano con ricorsione di ordine uno (complessit\`a lineare).
+\item Il valore iniziale di $z_0$ \`e assegnato, per gli altri:
+$$z_{k+1} = -z_k + 2 \frac{y_{k+1}-y_k}{x_{k+1}-x_k}$$
+\end{itemize}
+
+\subsection*{\bf ::: Spline cubica (naturale) :::} 
+\begin{itemize}
+\item Per $x\in[x_k,x_{k+1}]$, ho la cubica:
+$$f_k(x)=\frac{z_{k+1}(x-x_k)^3+z_k(x_{k+1}-x)^3}{6h_k}+\left(\frac{y_{k+1}}{h_k}-\frac{h_k}{6}z_{k+1}\right)(x-x_k)+\left(\frac{y_{k}}{h_k}-\frac{h_k}{6}z_{k}\right)(x_{k+1}-x),$$
+per ogni $k=0,...,n-1$, dove $h_k:=(x_{k+1}-x_k)$ reppresenta l'ampiezza dell'intervallo su cui \`e definita la cubica.
+\item I parametri $z_0,\ldots,z_n$ (intepretazione $z_k=f''(x_k)$) si ricavano mediante risoluzione di un sistema lineare di $n-1$ equazioni nelle $n-1$ incognite $z_1,\ldots,z_{n-1}$, mentre $z_0=z_n=0$ per la condizione di naturalit\`a. Le $n-1$ equazioni del sistema sono:
+$$h_{k-1}z_{k-1}+2(h_{k-1}+h_k)z_k+h_kz_{k+1}=6\left(\frac{y_{k+1}-y_k}{h_k}-\frac{y_k-y_{k-1}}{h_{k-1}}\right),$$
+con $k=1,\ldots,n-1$. Per poi se $h_k=1$ per ogni $k$ (ovvero le $x$ dei punti sono equidistanti ed a distanza uno), le equazioni si riscrivono come:
+$$z_{k-1}+4 z_k+z_{k+1}=6 (y_{k+1}-2y_k+y_{k-1})$$
+\end{itemize}
+
+\newpage
+%\subsection*{\bf ::: Interpolazione Trigonometrica :::} 
+%\begin{itemize}
+%\item Premessa: in questa formula, ho $n$ punti (e non $n+1$ come nelle altre) di coordinate $\{(x_i,y_i)\}_{i=0}^{n-1}$ ed assumo $n$ dispari.
+%\item La funzione interpolante \`e:
+%$$f(x):= C + \sum_{j=1}^m \left[ a_j \cos (jx) + b_j \sin (jx) \right],$$ 
+%e dipende da $n$ parametri (quindi $m=\frac{n-1}{2}$).
+%\item Se i punti di appoggio dividono l'intervallo $[0,2\pi]$ in $n$ parti uguali, allora valgono le seguenti formule:
+%$$a_j = \frac{2}{n} \sum_{i=0}^{n-1} \left[ y_i \cos(j x_i) \right], \quad \forall j=0,1,\ldots,m$$
+%$$b_j = \frac{2}{n} \sum_{i=0}^{n-1} \left[ y_i \sin(j x_i) \right], \quad \forall j=1,\ldots,m,$$
+%e $C=\frac{a_0}{2}$, con $a_0$ che si ricava dalla formula dei coseni (che da' semplicemente $a_0=\frac{2}{n}\sum_{i=0}^{n-1} y_i$, ovvero $C$ \`e il valore medio delle $y$).
+%\end{itemize}
+
+\subsection*{\bf ::: Regressione lineare :::} 
+\begin{itemize}
+\item Dati $n$ punti $\{(x_i,y_i)\}_{i=1}^{n}$ trovo retta rappresentativa di equazione $y=mx+q$
+\item $m=\frac{\sum_i x_i y_i - n \overline{x} \overline{y}}{\sum_i x_i^2 - n \overline{x}^2}$ e $q = \overline{y} - m \overline{x}$ con $\overline{x} = \frac{\sum_i x_i}{n}$ e $\overline{y}=\frac{\sum_i y_i}{n}$
+\end{itemize}
+
+
+\subsection*{\bf ::: Integrazione numerica :::} 
+\begin{itemize}
+\item Approssimo l'integrale $\int_{a}^b f(x) \mathrm{d}x$ dividendo l'intervallo $[a,b]$ in $n$ parti mediante gli $n+1$ punti $x_0,x_1,\ldots,x_n$ con $x_0=a$ e $x_n=b$.
+\item Somma aree trapezi $A_{tr}=\sum_{i=0}^{n-1} (x_{i+1}-x_i) \frac{f(x_i)+f(x_{i+1})}{2}=\frac{b-a}{n} \cdot \sum_{i=0}^{n-1} \frac{f(x_i)+f(x_{i+1})}{2}$
+\end{itemize}
+
+
+\end{document}

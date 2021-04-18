@@ -1,0 +1,40 @@
+\documentclass[professionalfonts]{beamer}
+\newif\ifita
+\itatrue % comment out to hide answers
+%\itafalse
+\input{mycommands.sty}
+\usepackage{comment}
+%%%%%%%%%%%%%%%%%%%%%
+\ifita
+\title{Algoritmi Numerici (Parte IV)}
+\subtitle{[Lezione 4] Interpolazione Trigonometrica}
+\else
+\title{Numerics (Part IV)}
+\subtitle{[Lectures 2 \& 3] Sp-Line Interpolation\\(Quadratic and Cubic)}
+\fi
+\date{}
+\author{Alessandro Antonucci\\{\tt alessandro.antonucci@supsi.ch}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+    \maketitle
+    \setbeamercovered{}
+    %\setstretch{1.3}
+    \frame{\frametitle{\ifita Interpolazione di Segnali Periodici \else Sp-line Approach \fi}
+\begin{itemize}
+\item Se i punti che devo interpolare rappresentano un fenomeno periodico
+\item Allora conviene interpolarli con funzioni di tipo periodico
+\item Al posto di una combinazione di potenze di $x$, uso una combinazione di seni e coseni di multipli di $x$
+\item Ricordo che $\sin(jx)$ e $\cos(jx)$ sono funzioni periodiche di periodo $2\pi / j$ e quindi anche di periodo $2\pi$.
+\end{itemize}
+}
+\frame{\frametitle{Interpolazione trigonometrica}
+\begin{itemize}
+\item Interpolo $n$ punti di coordinate $\{(x_i,y_i)\}_{i=0}^{n-1}$ ($n$ dispari)
+\item Uso la funzione $f(x):= C + \sum_{j=1}^m \left[ a_j \cos (jx) + b_j \sin (jx) \right]$
+\item Per bloccare i parametri $n=2m+1$, quindi $m=\frac{n-1}{2}$
+\item Se i punti di appoggio dividono l'intervallo $[0,2\pi]$ in $n$ parti uguali, allora valgono le seguenti formule: 
+$$a_j = \frac{2}{n} \sum_{i=0}^{n-1} \left[ y_i \cos(j x_i) \right], \quad \forall j=0,1,\ldots,m$$
+$$b_j = \frac{2}{n} \sum_{i=0}^{n-1} \left[ y_i \sin(j x_i) \right], \quad \forall j=1,\ldots,m,$$
+e $C=\frac{a_0}{2}$\\ ($C$ = media aritmetica delle $y$ dei punti di appoggio)
+\end{itemize}}
+\end{document}

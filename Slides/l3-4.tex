@@ -1,0 +1,170 @@
+\documentclass[professionalfonts]{beamer}
+\newif\ifita
+\itatrue % comment out to hide answers
+\itafalse
+\input{mycommands.sty}
+%%%%%%%%%%%%%%%%%%%%%
+\ifita
+\title{Algoritmi Numerici (Parte III)}
+\subtitle{[Lezione 3] Scomposizione LR ed Inversione Matrici}
+\else
+\title{Numerics (Part III)}
+\subtitle{[Lecture 3] LR Decomposition and Matrix Inversion}
+\fi
+\date{}
+\author{Alessandro Antonucci\\{\tt alessandro.antonucci@supsi.ch}}
+\begin{document}
+\maketitle
+\setstretch{1.4}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{\ifita L'idea (caso scalare)\else Idea (scalar case) \fi}
+$35 \cdot x = 8$ \\  %\quad Equazione Lineare\\
+$7 \cdot 5 x = 8$\\ %\quad Scompongo il coefficiente\\
+\vskip 2mm
+$5 x = y$ \\%\quad Introduco una nuova variabile\\
+$ 7 y = 8$ %\quad Riscrivo l'equazione con la nuova variabile
+\vskip 2mm
+$\begin{cases} 5x = y\\ 7y=8 \end{cases}$,\\ $y=\frac{8}{7}$,\\  $x=\frac{y}{5}=\frac{8}{35}$
+
+\begin{center}
+%Utile? No, nel caso scalare, a volte nel caso vettoriale
+\end{center}
+}
+
+\frame{\frametitle{\ifita Scomposizione LR\else LR Decomposition \fi}
+\begin{itemize}
+\item \ifita Dato sistema lineare \else Given linear system \fi $\hat{A} \cdot \vec{x} = \vec{b}$
+\item \ifita Scomposizione \else Decompose \fi $\hat{A}=\hat{L} \cdot \hat{R}$ \\
+\ifita
+($\hat{L}$ triangolare inferiore e $\hat{R}$ triangolare superiore)
+\else
+($\hat{L}$ lower triangular and $\hat{R}$ upper triangular)
+\fi
+\item 
+\ifita Il sistema diventa \else The system rewrites as \fi
+$\hat{L} \cdot \hat{R} \cdot \vec{x} = \vec{b}$
+\item \ifita Equivale a coppia sistemi triangolari \else Equivalent to a pair of triangular systems\fi
+$\left\{ \begin{array}{l} \hat{R} \cdot \vec{x} = \vec{y} \\ \hat{L} \cdot \vec{y} = \vec{b} \end{array} \right.$ 
+\ifita
+\item Entrambi i sistemi sono triangolari!
+\item Risolviamo il secondo e poi il primo per sostituzione
+\item Problema: come scomporre $\hat{A}$?
+\else
+\item Both systems are triangular!
+\item Solve the second and then the first (both by substitution)
+\item Problem: how to decompose $\hat{A}$ in the product $\hat{L}\cdot \hat{R}$?
+\fi
+\end{itemize}}
+
+\frame{\frametitle{\ifita Scomposizione LR (ii) \else LR Decomposition (ii)\fi}
+\begin{itemize}
+\item \ifita Per scomporre $\hat{A}$ nel prodotto di due matrici triangolari basta fare Gauss (ignorando la colonna dei termini noti) \else
+For $\hat{L}\hat{R}$ decomposition just do Gauss on $\hat{A}$ only (not $\hat{b}$) \fi 
+\item \ifita La matrice $\hat{R}$ \`e quella restituita dall'algoritmo di Gauss \else
+Matrix $\hat{R}$ is the output of Gauss \fi
+\item \ifita La matrice $\hat{L}$ ha \else Matrix $\hat{L}$ is such that\fi
+\begin{itemize} 
+\item \ifita sopra la diagonale: tutti zeri \else all zeros over the diagonal \fi
+\item \ifita sulla diagonale: tutti uno \else all ones on the diagonal \fi
+\item \ifita sotto la diagonale: valori coeff per annichilire elementi $\hat{A}$ 
+\else coeffs used to annihilate $\hat{A}$ elements\fi
+\end{itemize}
+\end{itemize}}
+
+\frame{\frametitle{\ifita Esempio $2\times 2$ (Scomposizione) \else $2\times 2$ Example (Decomposition) \fi}
+\begin{itemize}
+\item $\hat{A} = \left[ \begin{array}{cc} 2&1 \\ -1&-2 \end{array}  \right]$
+\vskip 4mm
+%,  $\vec{b} = \left[ \begin{array}{c} 7 \\ -5 \end{array}  \right]$
+\item Gauss \ifita solo su \else only on \fi $\vec{A}$, {\tt pivot}$=2$, {\tt coeff}$=-\frac{1}{2}$
+\vskip 4mm
+\item 
+$\hat{L} = \left[ \begin{array}{cc} 1&0 \\ -\frac{1}{2}&1 \end{array}  \right]$ , $\hat{R} = \left[ \begin{array}{cc} 2&1 \\ 0&-\frac{3}{2} \end{array}  \right]$
+\vskip 8mm
+\item \ifita Esercizio (verifica) \else Exercise (check the decomposition) \fi \vskip 3mm
+$\left[ \begin{array}{cc} 1&0 \\ -\frac{1}{2}&1 \end{array}  \right]
+\cdot 
+\left[ \begin{array}{cc} 2&1 \\ 0&-\frac{3}{2} \end{array}  \right]
+=
+\left[ \begin{array}{cc} 2&1 \\ -1&-2 \end{array}  \right]$
+\end{itemize}
+%$\hat{A} = \left[ \begin{array}{cc} \color{red}{2}&1 \\ -1&-2 \end{array}  \right]$
+}
+
+\frame{\frametitle{\ifita Esempio $2\times 2$ (Soluzione) \else $2\times 2$ Example (Solution) \fi}
+\begin{itemize}
+\item $\hat{A} = \left[ \begin{array}{cc} 2&1 \\ -1&-2 \end{array}  \right]$, $\vec{b} = \left[ \begin{array}{c} 7 \\ -5 \end{array}  \right]$
+\item \ifita Risolvo prima \else Solving first \fi $\hat{L}\cdot \vec{y} = \vec{b}$ \ifita e poi \else and then \fi $\hat{R} \cdot \vec{x} = \vec{y}$.
+\end{itemize}
+$$\left[ \begin{array}{cc} 1&0 \\ -\frac{1}{2}&1 \end{array}  \right]
+\cdot
+\left[ \begin{array}{c} \color{red}{y_1} \\ \color{red}{y_2} \end{array}  \right]
+=
+\left[ \begin{array}{c} 7 \\ -5 \end{array}  \right]
+$$
+$$\left[ \begin{array}{cc} 2&1 \\ 0&-\frac{3}{2} \end{array}  \right]
+\cdot
+\left[ \begin{array}{c} \color{blue}{x_1} \\ \color{blue}{x_2} \end{array}  \right]
+=
+\left[ \begin{array}{c} \color{red}{7} \\ \color{red}{-\frac{3}{2}} \end{array}  \right]
+$$
+\begin{itemize}
+\item $\color{blue}{x_2}=1$, $\color{blue}{x_1}=3$
+\end{itemize}
+}
+
+\frame{\frametitle{\ifita Analisi di Complessit\`a\else Complexity Analysis \fi}
+\begin{itemize}
+\ifita
+\item LR ha stessa complessit\`a di Gauss $O(n^3)$
+\item Devo poi fare due sostituzioni $2 O(n^2)$
+\item Stessa complessit\`a di Gauss + sostituzione
+\item Nessun vantaggio se bisogna risolvere un solo sistema
+\item Vantaggi se bisogna risolvere tanti sistemi,\\se tutti con la stessa matrice dei coefficienti
+\else
+\item LR complexity same as Gauss $O(n^3)$
+\item After LR, two substitutions are needed $2 O(n^2)$
+\item Same complexity as Gauss + substitution
+\item No benefits when solving a singly system
+\item Benefits when solving many systems,\\all with the same coefficients matrix
+\fi
+\end{itemize}
+}
+
+\frame{\frametitle{\ifita Inversione Matrici (Applicazione) \else Matrix Inversion (Application)\fi}
+\begin{itemize}
+\item $\hat{A} = \left[ \begin{array}{cc} 2&1 \\ -1&-2 \end{array}  \right]$ \quad $\hat{A}^{-1} = \left[ 
+\begin{array}{cc} \color{red}{\bullet}  & \color{blue}{\bullet} \\ 
+\color{red}{\bullet} & \color{blue}{\bullet} \end{array} 
+\right]$
+\vskip 2mm
+\item$\hat{A}\cdot \hat{A}^{-1}=
+\left[ \begin{array}{cc} 2&1 \\ -1&-2 \end{array}  \right]
+\cdot 
+\left[ \begin{array}{cc} \color{red}{\bullet}  & \color{blue}{\bullet} \\ 
+\color{red}{\bullet} & \color{blue}{\bullet} \end{array} 
+\right]
+=
+\left[ \begin{array}{cc} 1&0 \\ 0&1 \end{array}  \right]=\hat{I}$
+\item \ifita Risolvo (con LR) due sistemi con stessa matrice 
+\else Solving (by LR) two systems with the same
+$\hat{A}$:\fi
+\vskip 2mm
+\begin{itemize}
+\item $\left[ \begin{array}{cc} 2&1 \\ -1&-2 \end{array}  \right]
+\cdot 
+\left[ \begin{array}{cc} \color{red}{\bullet}   \\ 
+\color{red}{\bullet}  \end{array} 
+\right]
+=
+\left[ \begin{array}{cc} \color{red}{1} \\ \color{red}{0} \end{array}  \right]
+$
+\vskip 2mm
+\item $\left[ \begin{array}{cc} 2&1 \\ -1&-2 \end{array}  \right]
+\cdot 
+\left[ \begin{array}{cc} \color{blue}{\bullet}   \\ 
+\color{blue}{\bullet}  \end{array} 
+\right]=\left[ \begin{array}{cc} \color{blue}{0} \\ \color{blue}{1} \end{array}  \right]$
+\end{itemize}
+\end{itemize}}
+\end{document}

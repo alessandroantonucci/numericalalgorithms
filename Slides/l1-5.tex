@@ -1,0 +1,124 @@
+\documentclass[professionalfonts]{beamer}
+\newif\ifanswers
+%\answerstrue % comment out to hide answers
+\answersfalse
+\input{mycommands.sty}
+\ifanswers
+\title{Algoritmi Numerici (Parte I)}
+\subtitle{[Lezione 5] Operazioni Aritmetiche Bitwise}
+\else
+\title{Numerics (Part I)}
+\subtitle{[Lecture 5] Bitwise Arithmetics}
+\fi
+\date{}
+\author{Alessandro Antonucci\\{\tt alessandro.antonucci@supsi.ch}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\documentclass[professionalfonts,handout]{beamer}
+%\usepackage{circuitikz}
+%\input{mycommands.sty}
+%\title{Algoritmi Numerici (Parte I)}
+%\subtitle{[Lezione 6] Operazioni aritmetiche}
+%\author{Alessandro Antonucci\\{\tt alessandro.antonucci@supsi.ch}}
+%\date{\tiny\url{https://colab.research.google.com/drive/10HxMjR7A0Qa8X3cRe2ZCgO-rtRyYvVKY}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\maketitle
+\frame{\frametitle{Somma}
+\begin{itemize}
+\item \ifanswers Sistema a 4 bit con complemento a 2 \else 4-bit systems with two's complement \fi
+\item \ifanswers Somma con circuiti con porte Booleane \else Sum by Boolean gates \fi (\href{https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Halfadder.gif/220px-Halfadder.gif}{link}) \\ \exe{(ex. $0+0=1+1=0$ \quad $0+1=1+0=1$ XOR)} 
+\item $0010 + 0011 = 0101$ \exe{$2+3=5$} 
+\item $0010 + 1100 = 1110$ \exe{$2+(-4)=-2$}
+\item $0011 + 0110 = 1001$ \exe{$3+6 \neq -7$} overflow!
+\item $1100 + 1010 = 0110$ \exe{$-4-6 \neq 10$} underflow!
+\end{itemize}
+\begin{center}
+\emph{ \evi{Over/under flow \ifanswers se il primo bit \`e uguale \else if the first bit is equal\fi}
+\evi{\ifanswers nei due addendi, ma diverso nella somma\else in the two addends, but different in the sum\fi}}
+\end{center}
+\begin{itemize}
+\item $1100+1100=1000$ \exe{$-4-4=-8$} \\(\ifanswers giusto anche con riporto\else correct even with the carry\fi)
+\end{itemize}}
+
+\frame{\frametitle{\ifanswers Sottrazione (e precisione multipla)\else Subtraction (and multiple precision) \fi}
+\begin{itemize}
+\item \ifanswers Somma di due numeri a 4 bit: \else Summing two numbers (4 bit): \fi
+\begin{itemize}
+\item \ifanswers Two addends \else Due addendi \fi (4+4 bit)
+\item Carry (bit $C$) \ifanswers si attiva per il riporto \else active when bit carried over \fi \exe{$1+1=1$ AND}
+\item Overflow (bit $V$) \ifanswers si attiva per identificare \else active to detect \fi over/under
+\end{itemize}
+\item \ifanswers Numeri pi\`u grandi \else Bigger numbers \fi
+\begin{itemize}
+\item \ifanswers Precisione multipla (tante locazioni affiancate) \else Multiple precisions (many bit memories side-by-side) \fi
+\item \ifanswers Inizializzo \else Initialize \fi $C=0$  (\ifanswers non importa se alla fine \else no matter if eventually \fi $C=1$)
+\item \ifanswers Risultato corretto solo se \else Result correct if \fi $V=0$
+\end{itemize}
+\item \ifanswers Sottrazione \else Subtraction \fi
+\begin{itemize}
+\item a - b = a + (-b)
+\item \ifanswers Per ricavare \else To obtain \fi $-b$, $b$ in base 2 \\
+\ifanswers (ricopio da dx finch\'e non trovo $1$, scrivo quello, poi nego)
+\else (copying bits from the right, if $1$, copy it, then negate) \fi
+\end{itemize}
+\end{itemize}}
+
+\frame{\frametitle{\ifanswers Moltiplicazione e Divisione \else Multiplication and Division \fi}
+\begin{itemize}
+\ifanswers
+\item Moltiplicazioni in colonna = somme numeri spostati a sx
+\item ASL (arithmetic shift left) sposto i bit a sx (uno zero a dx)
+\item Es. ASR(0011)=0110 
+\item \`E moltiplicazione per 2 (se $V=0$ vale anche con complemento a 2)
+\item Divisione: analoga ma sposto a dx
+\item ASR (arithmetic shift right), divisione (intera) per 2
+\else
+\item Bitwise Multiplications = summing numbers shifted to the left
+\item ASL (arithmetic shift left) shifring numbers to the left (extra zero to the right)
+\item Es. ASR(0011)=0110 
+\item Multiplication by 2 (if $V=0$ valid also with two's complement)
+\item Division: just the same but moving to the right
+\fi
+\end{itemize}}
+
+\frame{\frametitle{\ifanswers Aritmetica Float\else Float Arithmetic\fi}
+\begin{itemize}
+\item \ifanswers Dati due numeri (float) \else Given two (float) numbers \fi
+\begin{itemize}
+\item $a = m_1 \cdot b^q$ 
+\item	$b = m_2 \cdot b^p$ ($q>p$)
+\end{itemize}
+\item \ifanswers Posso calcolare \else I can compute \fi
+
+\begin{itemize}
+\item $a+b = (m_1 + m_2 \cdot b^{p-q}) \cdot b^q$
+\item $a \cdot b = (m_1 \cdot m_2) \cdot b^{q+p}$
+\item $a / b= (m_1 / m_2) \cdot b^{q-p}$
+\end{itemize}
+\ifanswers
+\item Le operazioni sulla mantissa introducono un errore\\
+(riducono le cifre significative)
+\else
+\item Operations on the mantissa might produce an additional error\\
+(less significant digits)
+\fi
+\end{itemize}}
+
+\frame{\frametitle{Under/over flow \ifanswers con numeri float\else with float numbers \fi} 
+\ifanswers Formati float-like caratterizzati da:\else Float formats characterized by: \fi
+\begin{itemize}
+\item $m_1$ \ifanswers numero pi\`u piccolo rappresentabile \else smallest (machine) number\fi
+\item $M_1$ \ifanswers numero pi\`u grande \else largest (machine) number \fi
+\end{itemize}
+\ifanswers Quando inserisco un numero $x$, il sistema restituisce \else When $x$ is the number in input, system returns: \fi
+\begin{itemize}
+\item overflow \ifanswers se $x$ esterno a \else if $x$ does not belong to \fi $[-M_1,M_1]$
+\item underflow \ifanswers se $x$ interno a \else if $x$ belongs to \fi $(-m_1,m_1)$ 
+\ifanswers (approssimato con lo zero) \else rounded by the zero \fi
+\end{itemize}}
+%Nel formato float, se tutti i bit dell'esponente sono uno, casi speciali
+%\vskip 2mm
+%Es. $0|11111111|00000000000000000000000\to + \infty$
+%Es. $0|11111111| 00000000001000001000000 \to NaN$}
+\end{document}

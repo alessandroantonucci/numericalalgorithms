@@ -1,0 +1,237 @@
+\documentclass[professionalfonts]{beamer}
+\newif\ifanswers
+%\answerstrue % comment out to hide answers
+\answersfalse
+\input{mycommands.sty}
+\ifanswers
+\title{Algoritmi Numerici (Parte II)}
+\subtitle{[Esercitazione 1] Algoritmo di Bisezione}
+\else
+\title{Numerics (Part II)}
+\subtitle{[Exercise Session 1] Bisection Algorithm}
+\fi
+\date{}
+\author{Alessandro Antonucci\\{\tt alessandro.antonucci@supsi.ch}}
+\begin{document}
+\maketitle
+\setstretch{1.4}
+\frame{\frametitle{\ifanswers Esercizio \else Exercise \fi}
+\begin{enumerate}
+\item Estimate a zero of $f(x)=x^2-3$ in the interval $[0,3]$\\by four iterations of the bisection algorithm
+\item Evaluate the error for each iteration
+\item Do the same calculations in Excel
+\item How many iterations are need for an error $<0.001$?
+\item How many iterations would be needed according to a pessimistic estimate? Do I actually need to execute the algorithm to answer this question?
+\end{enumerate}}
+\end{document}
+
+
+\item \ifanswers Data una funzione $f$ (continua)\else Given a (continuous) function $f$ \fi
+\ifanswers
+\item \evi{Se} sull'intervallo $[a,b]\subset \mathbb{R}$,\\la funzione cambia segno,\\ovvero $f(a)\cdot f(b) < 0$
+\else
+\item \evi{If} in the interval $[a,b]\subset \mathbb{R}$,\\function $f$ changes its sign,\\that means $f(a)\cdot f(b) < 0$
+\fi
+\ifanswers
+\item \evi{Allora} la funzione ha uno zero\\in questo intervallo,\\ovvero $\exists$ $x^* \in [a,b]$ tale che $f(x^*)=0$
+\else
+\item \evi{Then} the function has a zero\\in this interval,\\that means $\exists$ $x^* \in [a,b]$ such that $f(x^*)=0$
+\fi
+\end{itemize}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{\ifanswers La bisezione\else Bisection Algorithm\fi}
+\begin{itemize}
+\item \ifanswers Dopo aver localizzato $x^*$ sull'intervallo $[a,b]$ \else
+After having localized $x^*$ in the interval $[a,b]$ \fi
+\item \ifanswers Prendo il punto medio \else Take the midpoint \fi $c:=\frac{a+b}{2}$
+\ifanswers
+\item La funzione cambia segno su $[a,c]$ \evi{oppure} su $[c,b]$
+\item Nel primo caso $x^*\in[a,c]$, \\ nel secondo $x^*\in [c,b]$
+\else
+\item The function changes its sign in $[a,c]$ \evi{or} in $[c,b]$
+\item In the first case $x^*\in[a,c]$, \\ in the second $x^*\in [c,b]$
+\fi
+\end{itemize}
+\begin{center}
+\ifanswers
+\color{black!50}{In entrambi i casi, il nuovo intervallo \`e la met\`a del vecchio}
+\else
+\color{black!50}{In both cases, the size of the new interval\\is half of the previous one}
+\fi
+\end{center}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{\ifanswers La bisezione (pseudo codice)\else Bisection (pseudocode) \fi}
+\begin{columns}
+\begin{column}[T]{0.4\textwidth}
+\tt
+if f(a)*f(b)<0: \\
+\quad for k in range(n): \\      
+\quad\quad	c = (a+b)/2;  \\  	
+\quad\quad	if f(a)*f(c) < 0:	\\
+\quad\quad\quad b = c\\     
+\quad\quad else\\
+\quad\quad\quad a = c\\
+\end{column}
+\begin{column}[T]{0.4\textwidth}
+\ifanswers
+L'algoritmo viene iterato
+\else
+Algorithm iterated
+\fi
+\begin{center}
+\ifanswers
+$n$ (numero fissato) volte
+\else
+$n$ (fixed number) times
+\fi
+\vskip 2mm
+\ifanswers oppure \else or \fi
+\vskip 2mm
+\ifanswers
+fino a quando\\
+$|b-a|$ diventa piccolo
+\else
+until $|b-a|$\\becomes small
+\fi
+\end{center}
+\end{column}
+\end{columns}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{\ifanswers Promemoria \else Don't forget\fi}
+\begin{itemize} 
+\item \ifanswers Dato l'intervallo \else Given the interval \fi $[a,b]$:
+	\begin{itemize}
+	\item \ifanswers la sua ampiezza \`e \else its size is \fi$b-a$
+	\item \ifanswers il suo punto medio \else its midpoint is \fi $\frac{a+b}{2}$
+	\end{itemize}
+\ifanswers
+\item Es. l'intervallo $[4,10]$ ha ampiezza $6$ e punto medio $x=7$
+\item Se $x^*\in[a,b]$, la stima puntuale \`e il punto medio $c:=\frac{a+b}{2}$
+\item L'errore peggiore \`e $\epsilon_{worst}=\frac{b-a}{2}$
+\item Ogni altra stima produrrebbe un errore superiore
+\else
+\item Ex. interval $[4,10]$ has size $6$ and midpoint $x=7$
+\item If $x^*\in[a,b]$, the best estimate is the midpoint $c:=\frac{a+b}{2}$
+\item We pessimistic error is $\epsilon_{worst}=\frac{b-a}{2}$
+\item Any other estimate not in the midpoint is less accurate
+\fi
+\end{itemize}
+}
+	
+	
+\frame{\frametitle{\ifanswers Analisi precisione \else Precision\fi}
+\begin{itemize}
+\item \ifanswers Intervallo iniziale \else Initial interval \fi $[a^0,b^0]$, 
+\ifanswers stima puntuale \else point estimate \fi $c^0:=\frac{a^0+b^0}{2}$
+\item $x^* \in [a^0,b^0]$ e $\epsilon^0:=|x^*-c^0|< \frac{b^0-a^0}{2}$
+\item \ifanswers Analogamente \else Similarly \fi, $\epsilon^k < \frac{b^0-a^0}{2^{k+1}}$
+\end{itemize}
+\begin{center}
+\ifanswers
+\color{black!50}{Con la bisezione posso quindi prevedere\\quante iterazioni servono per rendere l'errore minore\\di un valore prefissato}
+\else
+\color{black!50}{With bisection it is possible to predict how many iterations are needed to make the error smaller than a fixed value}
+\fi
+\end{center}}
+
+\frame{\frametitle{\ifanswers Osservazione \else Remark \fi}
+\begin{itemize}
+\ifanswers
+\item L'algoritmo di bisezione si basa sulla scelta di un punto $c$ interno all'intervallo $[a,b]$
+\item Scegliere il punto medio ha il vantaggio/svantaggio di rendere il nuovo intervallo la met\`a di quello vecchio
+\item Ogni altra scelta di $c\in[a,b]$ permette comunque di procedere
+\item In particolare, nella scelta di $c$ pu\`o essere utile considerare il valore (e non solo il segno) della funzione in $f(a)$ e $f(b)$
+\else
+\item Bisection algorithm needs to pick a point $c$ inside the interval $[a,b]$
+\item Pick the midpoint has the advantage/disadvantage of making the new interval half of the previous one
+\item Any other $c\in[a,b]$ allow to run the algorithm in a similar way
+\item When choosing  $c$ it might be important the value (and not only the sign) of the function in $f(a)$ and $f(b)$
+\fi
+\end{itemize}
+}
+
+\frame{\frametitle{Regula Falsi}
+\begin{itemize}
+\item \ifanswers Variante dell'algoritmo di bisezione \else A variant of bisection \fi 
+\ifanswers
+\item $c$ \`e il punto d'incontro con l'asse $x$ della retta che passa per i punti di coordinate $(a,f(a))$ e $(b,f(b))$
+\else
+\item $c$ is the point where the $x$ axis cut the segment connecting the points of coordinates $(a,f(a))$ e $(b,f(b))$
+
+\fi
+\end{itemize}
+\vskip 2mm
+$$c:= a - \frac{f(a)}{ \frac{f(b)-f(a)}{b-a}}$$}
+
+\frame{\frametitle{Regula falsi}
+\begin{tikzpicture}[domain=0:4,scale=1.2]
+\draw[->,thick] (-1,0) -- (5,0);
+\draw[densely dotted,black!60!green,thick] (0,3) -- (4,-7/3);
+\draw[black!60!green,thick] (9/4,-.1) -- (9/4,.1) node[above] {$c$};
+\draw[red,thick,densely dotted] (4,0) -- (4,-7/3);
+\draw [red,fill] (4,-7/3) circle [radius=0.05] node[right] {$(b,f(b))$};
+\draw[red,thick] (4,-.1) -- (4,.1) node[above] {$b$};
+\draw[blue,densely dotted,thick] (0,0) -- (0,3);
+\draw [blue,fill] (0,3) circle [radius=0.05] node[left] {$(a,f(a))$};
+\draw[blue,thick] (0,.1) -- (0,-.1) node[below] {$a$};
+\draw[thick,color=orange] plot[id=exp] function{3-x*x*1/3}; 
+\draw[black!60!green] (4,2) node[] {$c=a-\frac{f(a)}{\frac{f(b)-f(a)}{b-a}}$};
+%\draw [fill] (9,5) circle [radius=0.05];
+%\draw[very thin,color=gray] (-0.1,-1.1) grid (3.9,3.9);
+% node[right]{} {$x%$};
+%\draw[->] (0,-3.2) -- (0,6.2) node[above] {$f(x)$};
+%\draw[color=red] plot[id=x] function{x} 
+%node[right] {$f(x) =x$};
+%\draw[color=blue] plot[id=sin] function{sin(x)} 
+%node[right] {$f(x) = \sin x$};
+%\draw[color=blue] (0,-3) node[left] {$(a,f(a))$};
+%\draw[color=blue] (3,6) node[left] {$(b,f(b))$};
+%\draw[color=blue] (0,0) node[left] {$a$};
+%\draw[color=blue] (1.2,0) node[left] {$c$};
+%\draw[color=blue] (3,0) node[left] {$b$};
+%\draw (3,6)--(0,-3);
+%\draw[color=orange] plot[id=exp] function{x*x-3} 
+%node[right] {$f(x) = \mathrm x^2-3$};
+\end{tikzpicture}
+}
+
+
+\frame{\frametitle{Regula Falsi (ii)}
+\begin{itemize}
+\ifanswers
+\item Tipicamente, dopo un certo numero di iterazioni, la regula falsi sposta sempre l'estremo destro (o sempre quello sinistro) dell'intervallo
+\item Se sull'intervallo la funzione \`e sempre concava (o convessa), la retta che congiunge i due punti estremi \`e sempre a sx (o sempre a dx) dello zero della funzione
+\item In pratica, l'ampiezza dell'intervallo non tende a zero, ma il punto $c$ tende a $x^*$
+\else
+\item Typically, after some iterations, regula falsi always move the right point $b$ (or the left point $a$) in the interval
+\item If in the interval the function is concave (o convex), the segment connecting the two extreme points cuts the x-axis always to the left (or right) of the zero of the function
+\item In practice, the size of the interval does not tend to zero (even if $c$ tends to $x^*$)
+\fi
+\end{itemize}}
+
+
+\frame{\frametitle{\ifanswers Ibrido Regula Falsi + Bisezione \else Hybrid Regula Falsi + Bisection\fi}
+	\begin{itemize}
+\ifanswers
+\item Dato $[a,b]$ (su cui $f$ cambia segno)
+\item $[a,b]=RegFals(a,b)$ (una volta RF)
+\item WHILE($\ldots$ )$\{[a,b]=Bisez(a,b)\}$ \\
+(itero bisez finch\'e non si muove l'estremo fisso della RF)
+\item Ricomincio con RF
+\else
+\item Given $[a,b]$ (such that $f$ changes signature)
+\item $[a,b]=RegFals(a,b)$ (single RF iteration)
+\item WHILE($\ldots$ )$\{[a,b]=Bisect(a,b)\}$ \\
+(iterating bisection until the other extreme point moves)
+\item Restart with RF
+\fi
+	\end{itemize}
+	\vskip 2mm
+\begin{center}
+\ifanswers
+\emph{Supera problema estremo fisso della RF}
+\else
+\emph{Solves the problem of the fixed extreme point with RF}
+\fi
+\end{center}}
+\end{document}
